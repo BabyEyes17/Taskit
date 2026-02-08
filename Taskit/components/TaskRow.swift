@@ -46,11 +46,11 @@ struct TaskRow: View {
 
 
             // Favourite button
-            Button { task.isFavorite.toggle() } 
+            Button { task.isFavourite.toggle() } 
             
             label: {
                 
-                Image(systemName: task.isFavorite ? "star.fill" : "star")
+                Image(systemName: task.isFavourite ? "star.fill" : "star")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(.blue)
             }

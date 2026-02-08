@@ -6,7 +6,7 @@ struct TasksView: View {
 
     @EnvironmentObject var taskStore: TaskStore
     @State private var selectedCategory: String = "General"
-    @State private var favoritesOnly: Bool = false
+    @State private var favouritesOnly: Bool = false
     @State private var sortAscending: Bool = true
     @State private var goToNewTask: Bool = false
 
@@ -37,12 +37,12 @@ struct TasksView: View {
                     // Category chips row
                     HStack(spacing: 10) {
 
-                        // Favorites filter button (left star circle)
-                        Button { favoritesOnly.toggle() } 
+                        // Favourites filter button
+                        Button { favouritesOnly.toggle() } 
                         
                         label: {
                             
-                            Image(systemName: favoritesOnly ? "star.fill" : "star")
+                            Image(systemName: favouritesOnly ? "star.fill" : "star")
                                 .font(.system(size: 18, weight: .semibold))
                                 .frame(width: 42, height: 42)
                                 .background(Color(.systemBackground))
@@ -234,9 +234,9 @@ extension TasksView {
         // Filter by selected category
         result = result.filter { $0.category == selectedCategory }
 
-        // Favorites filter
-        if favoritesOnly {
-            result = result.filter { $0.isFavorite }
+        // Favourites filter
+        if favouritesOnly {
+            result = result.filter { $0.isFavourite }
         }
 
         // Sort by due date
