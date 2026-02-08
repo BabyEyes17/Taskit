@@ -1,9 +1,4 @@
-//
-//  ContentView.swift
-//  Taskit
-//
-//  Created by Jayden Lewis on 2026-02-04.
-//
+// Authored by
 
 import SwiftUI
 
