@@ -6,6 +6,12 @@ import Combine
 @MainActor
 final class TaskStore: ObservableObject {
 
+    static let preview: TaskStore = {
+        
+        let store = TaskStore()
+        return store
+    }()
+
     @Published var tasks: [Task] = [
 
         Task(
