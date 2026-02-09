@@ -96,8 +96,8 @@ struct TaskDetailsView: View {
     
     let store = TaskStore.preview
 
-    return NavigationStack {
-        
+    NavigationStack {
         TaskDetailsView(task: .constant(store.tasks[0]))
     }
 }
+
