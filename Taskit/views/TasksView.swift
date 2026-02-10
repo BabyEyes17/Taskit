@@ -107,8 +107,7 @@ struct TasksView: View {
                                 Image(systemName: "line.3.horizontal")
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundStyle(.blue)
-                            }
-
+                            }	
                             .padding(.leading, 6)
                         }
 
