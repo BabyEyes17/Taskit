@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXFileReference section */
@@ -11,11 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		98B84E222F33831E0046938F /* Taskit */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Taskit;
-			sourceTree = "<group>";
-		};
+		98B84E222F33831E0046938F /* Taskit */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Taskit; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +82,7 @@
 				};
 			};
 			buildConfigurationList = 98B84E1B2F33831E0046938F /* Build configuration list for PBXProject "Taskit" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -94,7 +91,6 @@
 			);
 			mainGroup = 98B84E172F33831E0046938F;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			productRefGroup = 98B84E212F33831E0046938F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
