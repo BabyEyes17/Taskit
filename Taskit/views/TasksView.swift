@@ -107,7 +107,8 @@ struct TasksView: View {
                                 Image(systemName: "line.3.horizontal")
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundStyle(.blue)
-                            }	
+                            }
+
                             .padding(.leading, 6)
                         }
 
@@ -119,17 +120,9 @@ struct TasksView: View {
                         // Task rows
                         VStack(spacing: 0) {
                             ForEach(filteredAndSortedTasks) { task in
-                                
-                                NavigationLink {
-                                    
-                                    TaskDetailsView(task: binding(for: task))
-                                } label: {
-                                    
-                                    TaskRow(task: binding(for: task))
-                                        .padding(.horizontal, 16)
-                                        .padding(.vertical, 12)
-                                }
-                                .buttonStyle(.plain)
+                                TaskRow(task: binding(for: task))
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 12)
 
                                 Divider()
                                     .padding(.leading, 16)
