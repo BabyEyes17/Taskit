@@ -7,13 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B27F35192F624D6300ADA5D5 /* TaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F35182F624D6300ADA5D5 /* TaskRow.swift */; };
+		B27F351C2F624DA000ADA5D5 /* DateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F351B2F624DA000ADA5D5 /* DateFormatting.swift */; };
+		B27F351F2F624DFC00ADA5D5 /* NewTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F351E2F624DFC00ADA5D5 /* NewTaskView.swift */; };
+		B27F35222F624E5F00ADA5D5 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F35212F624E5F00ADA5D5 /* Task.swift */; };
+		B27F35242F624E9800ADA5D5 /* TaskDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F35232F624E9800ADA5D5 /* TaskDetailsView.swift */; };
+		B27F35262F624EEE00ADA5D5 /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F35252F624EEE00ADA5D5 /* TaskStore.swift */; };
+		B27F35282F624F1300ADA5D5 /* TasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F35272F624F1300ADA5D5 /* TasksView.swift */; };
 		B28324442F62483300B633F8 /* TaskitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28324432F62483300B633F8 /* TaskitApp.swift */; };
-		B28324462F62483300B633F8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28324452F62483300B633F8 /* ContentView.swift */; };
 		B28324482F62483600B633F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B28324472F62483600B633F8 /* Assets.xcassets */; };
 		B283244C2F62483600B633F8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B283244B2F62483600B633F8 /* Preview Assets.xcassets */; };
 		B28324562F62483700B633F8 /* TaskitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28324552F62483700B633F8 /* TaskitTests.swift */; };
 		B28324602F62483700B633F8 /* TaskitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B283245F2F62483700B633F8 /* TaskitUITests.swift */; };
 		B28324622F62483700B633F8 /* TaskitUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28324612F62483700B633F8 /* TaskitUITestsLaunchTests.swift */; };
+		B28324702F62498400B633F8 /* CategoryChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = B283246F2F62498400B633F8 /* CategoryChip.swift */; };
+		B28324722F6249FE00B633F8 /* TagChipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28324712F6249FE00B633F8 /* TagChipsView.swift */; };
+		B28324742F624A6D00B633F8 /* TaskDetailActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28324732F624A6D00B633F8 /* TaskDetailActions.swift */; };
+		B28324762F624AB500B633F8 /* TaskDetailCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28324752F624AB500B633F8 /* TaskDetailCard.swift */; };
+		B28324782F624ADE00B633F8 /* TaskDetailRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28324772F624ADE00B633F8 /* TaskDetailRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +45,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B27F35182F624D6300ADA5D5 /* TaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRow.swift; sourceTree = "<group>"; };
+		B27F351B2F624DA000ADA5D5 /* DateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatting.swift; sourceTree = "<group>"; };
+		B27F351E2F624DFC00ADA5D5 /* NewTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTaskView.swift; sourceTree = "<group>"; };
+		B27F35212F624E5F00ADA5D5 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		B27F35232F624E9800ADA5D5 /* TaskDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsView.swift; sourceTree = "<group>"; };
+		B27F35252F624EEE00ADA5D5 /* TaskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStore.swift; sourceTree = "<group>"; };
+		B27F35272F624F1300ADA5D5 /* TasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksView.swift; sourceTree = "<group>"; };
 		B28324402F62483300B633F8 /* Taskit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Taskit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B28324432F62483300B633F8 /* TaskitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskitApp.swift; sourceTree = "<group>"; };
-		B28324452F62483300B633F8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B28324472F62483600B633F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B28324492F62483600B633F8 /* Taskit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Taskit.entitlements; sourceTree = "<group>"; };
 		B283244B2F62483600B633F8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -45,6 +62,11 @@
 		B283245B2F62483700B633F8 /* TaskitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TaskitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B283245F2F62483700B633F8 /* TaskitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskitUITests.swift; sourceTree = "<group>"; };
 		B28324612F62483700B633F8 /* TaskitUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskitUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		B283246F2F62498400B633F8 /* CategoryChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryChip.swift; sourceTree = "<group>"; };
+		B28324712F6249FE00B633F8 /* TagChipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChipsView.swift; sourceTree = "<group>"; };
+		B28324732F624A6D00B633F8 /* TaskDetailActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailActions.swift; sourceTree = "<group>"; };
+		B28324752F624AB500B633F8 /* TaskDetailCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailCard.swift; sourceTree = "<group>"; };
+		B28324772F624ADE00B633F8 /* TaskDetailRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +94,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B27F351A2F624D8600ADA5D5 /* utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B27F351B2F624DA000ADA5D5 /* DateFormatting.swift */,
+			);
+			path = utilities;
+			sourceTree = "<group>";
+		};
+		B27F351D2F624DE300ADA5D5 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				B27F35292F62508E00ADA5D5 /* modals */,
+				B27F351E2F624DFC00ADA5D5 /* NewTaskView.swift */,
+				B27F35232F624E9800ADA5D5 /* TaskDetailsView.swift */,
+				B27F35272F624F1300ADA5D5 /* TasksView.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		B27F35202F624E3000ADA5D5 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				B27F35212F624E5F00ADA5D5 /* Task.swift */,
+				B27F35252F624EEE00ADA5D5 /* TaskStore.swift */,
+			);
+			path = data;
+			sourceTree = "<group>";
+		};
+		B27F35292F62508E00ADA5D5 /* modals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = modals;
+			sourceTree = "<group>";
+		};
 		B28324372F62483300B633F8 = {
 			isa = PBXGroup;
 			children = (
@@ -95,8 +152,11 @@
 		B28324422F62483300B633F8 /* Taskit */ = {
 			isa = PBXGroup;
 			children = (
+				B27F35202F624E3000ADA5D5 /* data */,
+				B27F351D2F624DE300ADA5D5 /* views */,
+				B27F351A2F624D8600ADA5D5 /* utilities */,
+				B283246E2F62491900B633F8 /* components */,
 				B28324432F62483300B633F8 /* TaskitApp.swift */,
-				B28324452F62483300B633F8 /* ContentView.swift */,
 				B28324472F62483600B633F8 /* Assets.xcassets */,
 				B28324492F62483600B633F8 /* Taskit.entitlements */,
 				B283244A2F62483600B633F8 /* Preview Content */,
@@ -127,6 +187,19 @@
 				B28324612F62483700B633F8 /* TaskitUITestsLaunchTests.swift */,
 			);
 			path = TaskitUITests;
+			sourceTree = "<group>";
+		};
+		B283246E2F62491900B633F8 /* components */ = {
+			isa = PBXGroup;
+			children = (
+				B283246F2F62498400B633F8 /* CategoryChip.swift */,
+				B28324712F6249FE00B633F8 /* TagChipsView.swift */,
+				B28324732F624A6D00B633F8 /* TaskDetailActions.swift */,
+				B28324752F624AB500B633F8 /* TaskDetailCard.swift */,
+				B28324772F624ADE00B633F8 /* TaskDetailRow.swift */,
+				B27F35182F624D6300ADA5D5 /* TaskRow.swift */,
+			);
+			path = components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,8 +332,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B28324462F62483300B633F8 /* ContentView.swift in Sources */,
+				B28324742F624A6D00B633F8 /* TaskDetailActions.swift in Sources */,
+				B27F35282F624F1300ADA5D5 /* TasksView.swift in Sources */,
+				B27F351C2F624DA000ADA5D5 /* DateFormatting.swift in Sources */,
+				B27F35262F624EEE00ADA5D5 /* TaskStore.swift in Sources */,
+				B27F35242F624E9800ADA5D5 /* TaskDetailsView.swift in Sources */,
+				B27F35222F624E5F00ADA5D5 /* Task.swift in Sources */,
+				B27F351F2F624DFC00ADA5D5 /* NewTaskView.swift in Sources */,
+				B28324702F62498400B633F8 /* CategoryChip.swift in Sources */,
+				B27F35192F624D6300ADA5D5 /* TaskRow.swift in Sources */,
+				B28324762F624AB500B633F8 /* TaskDetailCard.swift in Sources */,
 				B28324442F62483300B633F8 /* TaskitApp.swift in Sources */,
+				B28324722F6249FE00B633F8 /* TagChipsView.swift in Sources */,
+				B28324782F624ADE00B633F8 /* TaskDetailRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
