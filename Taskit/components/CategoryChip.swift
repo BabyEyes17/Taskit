@@ -19,7 +19,7 @@ struct CategoryChip: View {
                 .foregroundStyle(isSelected ? .blue : .secondary)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
-                .background(Color(.systemBackground))
+                .background(Color.white)
                 .clipShape(Capsule())
                 .overlay(Capsule().stroke(isSelected ? Color.blue.opacity(0.15) : Color.clear, lineWidth: 1))
                 .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 3)

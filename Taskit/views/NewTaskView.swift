@@ -23,7 +23,7 @@ struct NewTaskView: View {
         NavigationStack{
             ZStack {
                 
-                Color(.systemGroupedBackground).ignoresSafeArea()
+                Color(red: 242/255, green: 242/255, blue: 247/255).ignoresSafeArea()
 
                 VStack(alignment: .leading, spacing: 14) {
                     
@@ -33,7 +33,7 @@ struct NewTaskView: View {
                                 .font(.system(size: 16, weight: .semibold))
                                 .foregroundStyle(.primary)
                                 .frame(width: 36, height: 36)
-                                .background(Color(.systemBackground).opacity(0.85))
+                                .background(Color.white.opacity(0.85))
                                 .clipShape(Circle())
                         }
                         Spacer()
@@ -155,7 +155,7 @@ struct NewTaskView: View {
                         Spacer()
                     }
                 }
-                .background(Color(.systemBackground))
+                .background(Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                 .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 6)
                 .padding(.horizontal, 20)
