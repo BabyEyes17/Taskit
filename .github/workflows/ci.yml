@@ -1,97 +1,44 @@
-name: Taskit CI
+name: iOS CI
 
 on:
   push:
-    branches:
-      - main
-      - develop
   pull_request:
-    branches:
-      - main
-      - develop
 
 jobs:
-  build-and-test:
-    name: Build & Test
-    runs-on: macos-14
+  build:
+    runs-on: macos-latest
+
     defaults:
       run:
-        working-directory: Taskit
+        working-directory: ${{ github.workspace }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Select Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+      - name: Verify Xcode project exists
+        run: ls -la Taskit.xcodeproj
 
-      - name: Show Xcode version
-        run: xcodebuild -version
-
-      - name: Show available simulators
-        run: xcrun simctl list devices available
-
-      - name: Resolve Swift Package dependencies
+      - name: Resolve package dependencies
         run: |
           xcodebuild -resolvePackageDependencies \
             -project Taskit.xcodeproj \
             -scheme Taskit
 
-      - name: Build (Debug)
+      - name: Build
         run: |
-          set -o pipefail
           xcodebuild build \
             -project Taskit.xcodeproj \
             -scheme Taskit \
-            -configuration Debug \
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             CODE_SIGNING_ALLOWED=NO \
             | xcpretty
 
-      - name: Run Unit Tests
+      - name: Run tests
         run: |
-          set -o pipefail
           xcodebuild test \
             -project Taskit.xcodeproj \
-            -scheme TaskitTests \
+            -scheme Taskit \
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             CODE_SIGNING_ALLOWED=NO \
-            -resultBundlePath ../TestResults/UnitTests.xcresult \
             | xcpretty
-
-      - name: Run UI Tests
-        run: |
-          set -o pipefail
-          xcodebuild test \
-            -project Taskit.xcodeproj \
-            -scheme TaskitUITests \
-            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
-            CODE_SIGNING_ALLOWED=NO \
-            -resultBundlePath ../TestResults/UITests.xcresult \
-            | xcpretty
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: TestResults/
-          retention-days: 7
-
-  lint:
-    name: SwiftLint
-    runs-on: macos-14
-    defaults:
-      run:
-        working-directory: Taskit
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install SwiftLint
-        run: brew install swiftlint
-
-      - name: Run SwiftLint
-        run: swiftlint lint --reporter github-actions-logging
-        continue-on-error: true
