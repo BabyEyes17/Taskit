@@ -38,7 +38,7 @@ struct TasksView: View {
                     HStack(spacing: 10) {
 
                         // Favourites filter button
-                        Button { favouritesOnly.toggle() } 
+                        Button { favouritesOnly.toggle() }
                         
                         label: {
                             
@@ -87,7 +87,7 @@ struct TasksView: View {
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundStyle(.secondary)
 
-                            Button { sortAscending.toggle() } 
+                            Button { sortAscending.toggle() }
                             
                             label: {
                                 Image(systemName: sortAscending ? "arrow.up.arrow.down" : "arrow.down.arrow.up")
@@ -99,8 +99,8 @@ struct TasksView: View {
 
                             Button {
                 
-                                // TODO: list options 
-                            } 
+                                // TODO: list options
+                            }
 
                             label: {
                                 
@@ -148,7 +148,7 @@ struct TasksView: View {
                         Button {
                             
                             // TODO: search UI
-                        } 
+                        }
                         
                         label: {
                             
@@ -176,7 +176,7 @@ struct TasksView: View {
                         
                         Spacer()
                         
-                        Button { goToNewTask = true } 
+                        Button { goToNewTask = true }
                         
                         label: {
                             

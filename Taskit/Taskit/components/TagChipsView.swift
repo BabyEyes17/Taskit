@@ -26,7 +26,7 @@ struct TagChipsView: View {
                     .font(.system(size: 16))
                     .foregroundStyle(.secondary)
 
-            } 
+            }
             
             else {
 
@@ -38,7 +38,7 @@ struct TagChipsView: View {
                             .font(.system(size: 14, weight: .medium))
                             .padding(.vertical, 6)
                             .padding(.horizontal, 12)
-                            .background(Color(.systemGray6))
+                            .background(Color(red: 242/255, green: 242/255, blue: 247/255))
                             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     }
                 }

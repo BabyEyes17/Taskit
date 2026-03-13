@@ -30,3 +30,8 @@ The Tasks View lists all the user's tasks with the option to view tasks categori
 
 
 ### Task Details View
+
+
+## Xcode Version Compatability Challenge
+During development, we were faced with a compatability error where the Taskit project files were unable to be run on College lab computers. This was due to the project being created on a Cloud Mac using Xcode version 26.3, incompatible with the lab computers Xcode IDE running on version 14.2. This required the project to be downgraded to a version that could be accessed by both environments. Unfortunatley downgrading the project was more difficult than anticipated and so the solution was to rebuild the project from the ground up and copy the last working commit to the new project.
+

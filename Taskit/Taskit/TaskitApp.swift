@@ -5,11 +5,13 @@ import SwiftUI
 @main
 struct TaskitApp: App {
     
+    @StateObject private var taskStore = TaskStore()
+    
     var body: some Scene {
         
         WindowGroup {
             
-            TasksView()
+            TasksView().environmentObject(taskStore)
         }
     }
 }

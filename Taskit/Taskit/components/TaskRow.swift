@@ -15,7 +15,7 @@ struct TaskRow: View {
 
 
             // Completion button
-            Button { task.isCompleted.toggle() } 
+            Button { task.isCompleted.toggle() }
             
             label: {
                 
@@ -46,7 +46,7 @@ struct TaskRow: View {
 
 
             // Favourite button
-            Button { task.isFavourite.toggle() } 
+            Button { task.isFavourite.toggle() }
             
             label: {
                 

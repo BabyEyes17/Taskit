@@ -91,11 +91,3 @@ struct TaskDetailsView: View {
         return "Repeat: \(task.repeatRule.rawValue)"
     }
 }
-
-#Preview {
-    
-    NavigationStack {
-        
-        TaskDetailsView(task: .constant(TaskStore.preview.tasks[0]))
-    }
-}
