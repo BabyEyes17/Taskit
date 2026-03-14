@@ -10,6 +10,7 @@ struct TaskDetailRow: View {
     var useSecondaryText: Bool = false
 
     var body: some View {
+
         HStack(alignment: .top, spacing: 12) {
 
             Image(systemName: icon)
@@ -30,7 +31,17 @@ struct TaskDetailRow: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
-    TaskDetailRow(icon: "clock", title: "Sunday, January 25th - 9:00 AM")
-        .padding()
+    VStack(spacing: 0) {
+        TaskDetailRow(icon: "list.bullet", title: "General")
+        Divider().padding(.leading, 44)
+        TaskDetailRow(icon: "text.alignleft", title: "No description", useSecondaryText: true)
+        Divider().padding(.leading, 44)
+        TaskDetailRow(icon: "clock", title: "Sunday, January 25th - 9:00 AM")
+    }
+    .background(Color(.systemBackground))
+    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+    .padding()
 }

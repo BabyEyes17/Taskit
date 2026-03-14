@@ -12,7 +12,9 @@ struct TaskDetailCard: View {
     let tags: [String]
 
     var body: some View {
+
         VStack(spacing: 0) {
+
             Group {
                 TaskDetailRow(icon: "list.bullet", title: category)
 
@@ -48,14 +50,17 @@ struct TaskDetailCard: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     TaskDetailCard(
         category: "General",
-        description: "Sort items and decide where everything should go.",
+        description: "Sort items on the desk and decide where everything should go for better workflow.",
         dueDateText: "Sunday, January 25th - 9:00 AM",
-        notificationText: "Notify me 15 minutes before",
-        repeatText: "Repeat: Weekly",
-        tags: ["home", "productivity"]
+        notificationText: "Notifications off",
+        repeatText: "Repeat: Never",
+        tags: ["Swift", "iOS 26"]
     )
     .padding()
+    .background(Color(.systemGroupedBackground))
 }

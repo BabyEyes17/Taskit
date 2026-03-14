@@ -12,10 +12,12 @@ extension Date {
     func formatted(using style: TaskDateStyle) -> String {
         let df = DateFormatter()
         df.locale = .current
+
         switch style {
         case .weekdayAbbrevMonthDay:
             df.dateFormat = "EEEE, MMM d"
         }
+
         return df.string(from: self)
     }
 
@@ -34,9 +36,9 @@ extension Date {
         let tens = day % 100
         if tens >= 11 && tens <= 13 { return "th" }
         switch day % 10 {
-        case 1:  return "st"
-        case 2:  return "nd"
-        case 3:  return "rd"
+        case 1: return "st"
+        case 2: return "nd"
+        case 3: return "rd"
         default: return "th"
         }
     }

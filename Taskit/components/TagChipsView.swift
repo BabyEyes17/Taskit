@@ -11,6 +11,7 @@ struct TagChipsView: View {
     ]
 
     var body: some View {
+
         HStack(alignment: .top, spacing: 12) {
 
             Image(systemName: "tag")
@@ -19,17 +20,21 @@ struct TagChipsView: View {
                 .frame(width: 24)
 
             if tags.isEmpty {
+
                 Text("No tags")
                     .font(.system(size: 16))
                     .foregroundStyle(.secondary)
+
             } else {
+
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+
                     ForEach(tags, id: \.self) { tag in
                         Text(tag)
                             .font(.system(size: 14, weight: .medium))
                             .padding(.vertical, 6)
                             .padding(.horizontal, 12)
-                            .background(Color(red: 242/255, green: 242/255, blue: 247/255))
+                            .background(Color(.systemGroupedBackground))
                             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     }
                 }
@@ -42,7 +47,11 @@ struct TagChipsView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
-    TagChipsView(tags: ["reading", "focus", "morning"])
-        .padding()
+    VStack {
+        TagChipsView(tags: ["Swift", "iOS 26", "SwiftUI"])
+        TagChipsView(tags: [])
+    }
 }

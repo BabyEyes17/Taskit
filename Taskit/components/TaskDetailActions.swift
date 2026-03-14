@@ -9,15 +9,14 @@ struct TaskDetailActions: View {
     let onDelete: () -> Void
 
     var body: some View {
+
         VStack(spacing: 10) {
 
             HStack {
+
                 Button { onEdit() } label: {
                     Text("Edit").frame(maxWidth: .infinity)
                 }
-
-                Divider()
-                    .frame(height: 22)
 
                 Button { isCompleted.toggle() } label: {
                     Text(isCompleted ? "Mark Incomplete" : "Mark Completed")
@@ -41,11 +40,13 @@ struct TaskDetailActions: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     TaskDetailActions(
         isCompleted: .constant(false),
-        onEdit:   { print("Edit") },
-        onDelete: { print("Delete") }
+        onEdit: {},
+        onDelete: {}
     )
     .padding()
 }

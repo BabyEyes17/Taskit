@@ -1,25 +1,25 @@
-// Authored by Jayden Lewis on 04/02/2026
+/// Authored by Jayden Lewis on 04/02/2026
 
 import Foundation
 
-struct Task: Identifiable, Codable, Equatable {
-    
+struct TaskItem: Identifiable, Codable, Equatable {
+
     let id: UUID
     var title: String
     var description: String
     var category: String
     var dueDate: Date
-    
+
     var notificationsEnabled: Bool
     var notifyBeforeMinutes: Int?
-    
+
     var repeatRule: RepeatRule
-    
+
     var isCompleted: Bool = false
     var isFavourite: Bool = false
-    
+
     var tags: [String]
-    
+
     init(
         id: UUID = UUID(),
         title: String,
@@ -48,11 +48,12 @@ struct Task: Identifiable, Codable, Equatable {
 }
 
 enum RepeatRule: String, CaseIterable, Identifiable, Codable {
+
     case none    = "Never"
     case daily   = "Daily"
     case weekly  = "Weekly"
     case monthly = "Monthly"
     case yearly  = "Yearly"
-    
+
     var id: String { rawValue }
 }

@@ -1,24 +1,26 @@
 // Authored by Jayden Lewis on 07/02/2026
+// TaskDetailsView.swift
 
 import SwiftUI
 
 struct TaskDetailsView: View {
 
-    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var taskStore: TaskStore
+    @Environment(\.dismiss) private var dismiss
+    @Binding var task: TaskItem
 
-    @Binding var task: Task
-
-    @State private var goToEdit: Bool         = false
-    @State private var showDeleteConfirm: Bool = false
+    @State private var showEditSheet    = false
+    @State private var showDeleteAlert  = false
 
     var body: some View {
+
         ZStack {
+
             Color(.systemGroupedBackground).ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 16) {
 
-                // MARK: Back button
+                // Back button
                 HStack {
                     Button { dismiss() } label: {
                         Image(systemName: "chevron.left")
@@ -31,12 +33,12 @@ struct TaskDetailsView: View {
                     Spacer()
                 }
 
-                // MARK: Title
+                // Title
                 Text(task.title)
                     .font(.system(size: 34, weight: .bold))
                     .padding(.top, 4)
 
-                // MARK: Detail card
+                // Detail card
                 TaskDetailCard(
                     category: task.category,
                     description: task.description,
@@ -46,16 +48,14 @@ struct TaskDetailsView: View {
                     tags: task.tags
                 )
 
-                // MARK: Actions
+                // Actions
                 TaskDetailActions(
                     isCompleted: $task.isCompleted,
-
                     onEdit: {
-                        goToEdit = true
+                        showEditSheet = true
                     },
-
                     onDelete: {
-                        showDeleteConfirm = true
+                        showDeleteAlert = true
                     }
                 )
 
@@ -65,23 +65,19 @@ struct TaskDetailsView: View {
             .padding(.top, 14)
         }
         .navigationBarBackButtonHidden(true)
-        // Navigate to edit form
-        .navigationDestination(isPresented: $goToEdit) {
-            NewTaskView(taskToEdit: task)
+        .sheet(isPresented: $showEditSheet) {
+            // TODO: EditTaskView — reuse NewTaskView pre-filled
+            Text("Edit Task — coming soon")
+                .padding()
         }
-        // Delete confirmation
-        .confirmationDialog(
-            "Delete "\(task.title)"?",
-            isPresented: $showDeleteConfirm,
-            titleVisibility: .visible
-        ) {
+        .alert("Delete Task", isPresented: $showDeleteAlert) {
             Button("Delete", role: .destructive) {
-                taskStore.delete(task)
+                taskStore.deleteTask(task)
                 dismiss()
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("This task will be permanently removed.")
+            Text("Are you sure you want to delete \"\(task.title)\"? This cannot be undone.")
         }
     }
 
@@ -103,10 +99,12 @@ struct TaskDetailsView: View {
 }
 
 // MARK: - Preview
+
 #Preview {
-    let store = TaskStore.preview
+    let store = TaskStore()
+    @State var task = store.tasks[0]
     return NavigationStack {
-        TaskDetailsView(task: .constant(store.tasks[0]))
+        TaskDetailsView(task: $task)
             .environmentObject(store)
     }
 }

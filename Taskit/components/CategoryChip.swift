@@ -1,5 +1,5 @@
 // Authored by Jayden Lewis on 07/02/2026
-// Displays a selectable category chip
+// This component is called for displaying a formatted category chip
 
 import SwiftUI
 
@@ -10,7 +10,9 @@ struct CategoryChip: View {
     let onTap: () -> Void
 
     var body: some View {
+
         Button(action: onTap) {
+
             Text(title)
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(isSelected ? .blue : .secondary)
@@ -20,20 +22,21 @@ struct CategoryChip: View {
                 .clipShape(Capsule())
                 .overlay(
                     Capsule()
-                        .stroke(
-                            isSelected ? Color.blue.opacity(0.15) : Color.clear,
-                            lineWidth: 1
-                        )
+                        .stroke(isSelected ? Color.blue.opacity(0.15) : Color.clear, lineWidth: 1)
                 )
                 .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 3)
         }
     }
 }
 
+// MARK: - Preview
+
 #Preview {
-    HStack {
+    HStack(spacing: 10) {
         CategoryChip(title: "General", isSelected: true,  onTap: {})
         CategoryChip(title: "School",  isSelected: false, onTap: {})
+        CategoryChip(title: "Work",    isSelected: false, onTap: {})
     }
     .padding()
+    .background(Color(.systemGroupedBackground))
 }
