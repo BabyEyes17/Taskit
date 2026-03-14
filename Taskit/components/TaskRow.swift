@@ -3,11 +3,13 @@
 // For final implementation, this component will support navigation to the respective task's detailed view
 
 import SwiftUI
+import CoreData
 
 struct TaskRow: View {
-    
-    @Binding var task: Task
 
+    @Environment(\.managedObjectContext) private var context
+    @ObservedObject var task: TaskEntity
+    
     var body: some View {
         
         HStack(spacing: 12) {
@@ -15,7 +17,7 @@ struct TaskRow: View {
 
 
             // Completion button
-            Button { task.isCompleted.toggle() }
+            Button { TaskRepository.toggleCompleted(task, context: context) }
             
             label: {
                 
@@ -31,12 +33,12 @@ struct TaskRow: View {
             // Title and due date display
             VStack(alignment: .leading, spacing: 4) {
                 
-                Text(task.title)
+                Text(task.title ?? "")
                     .font(.system(size: 17, weight: .semibold))
                     .strikethrough(task.isCompleted, color: .secondary)
                     .foregroundStyle(task.isCompleted ? .secondary : .primary)
 
-                Text(task.dueDate.formatted(using: .weekdayAbbrevMonthDay))
+                Text(task.dueDate?.formatted(using: .weekdayAbbrevMonthDay) ?? "")
                     .font(.system(size: 14))
                     .foregroundStyle(.secondary)
             }
@@ -46,7 +48,7 @@ struct TaskRow: View {
 
 
             // Favourite button
-            Button { task.isFavourite.toggle() }
+            Button { TaskRepository.toggleFavourite(task, context: context) }
             
             label: {
                 

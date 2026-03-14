@@ -3,7 +3,7 @@
 import CoreData
 import SwiftUI
 
-struct TaskStore {
+struct TaskRepository {
     
     static func addTask(
         
@@ -41,9 +41,15 @@ struct TaskStore {
         save(context: context)
     }
     
-    static func toggleCompleted( _ task: TaskEntity, context: NSManagedObjectContext) {
+    static func toggleCompleted(_ task: TaskEntity, context: NSManagedObjectContext) {
         
         task.isCompleted.toggle()
+        save(context: context)
+    }
+    
+    static func toggleFavourite(_ task: TaskEntity, context: NSManagedObjectContext) {
+        
+        task.isFavourite.toggle()
         save(context: context)
     }
     

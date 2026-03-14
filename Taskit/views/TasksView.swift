@@ -4,7 +4,15 @@ import SwiftUI
 
 struct TasksView: View {
 
-    @EnvironmentObject var taskStore: TaskStore
+    @Environment(\.managedObjectContext) private var context
+    
+    @FetchRequest(
+        sortDescriptors: [SortDescriptor(\.dueDate, order: .forward)],
+        animation: .default
+    )
+    
+    private var tasks: FetchedResults<TaskEntity>
+    
     @State private var selectedCategory: String = "General"
     @State private var favouritesOnly: Bool = false
     @State private var sortAscending: Bool = true
@@ -99,7 +107,7 @@ struct TasksView: View {
 
                             Button {
                 
-                                // TODO: list options
+                                // TODO: List Sorting Options
                             }
 
                             label: {
@@ -120,7 +128,7 @@ struct TasksView: View {
                         // Task rows
                         VStack(spacing: 0) {
                             ForEach(filteredAndSortedTasks) { task in
-                                TaskRow(task: binding(for: task))
+                                TaskRow(task: task)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 12)
 
@@ -207,7 +215,7 @@ extension TasksView {
 
     private var categories: [String] {
         
-        let cats = Set(taskStore.tasks.map { $0.category })
+        let cats = Set(tasks.compactMap { $0.category })
         let sorted = cats.sorted()
 
         if sorted.contains("General") {
@@ -222,9 +230,9 @@ extension TasksView {
         return sorted
     }
 
-    private var filteredAndSortedTasks: [Task] {
+    private var filteredAndSortedTasks: [TaskEntity] {
         
-        var result = taskStore.tasks
+        var result = tasks.filter { $0.category == selectedCategory }
 
         // Ensure selectedCategory is valid
         if !categories.contains(selectedCategory), let first = categories.first {
@@ -240,21 +248,11 @@ extension TasksView {
         }
 
         // Sort by due date
-        result.sort { a, b in
-            sortAscending ? (a.dueDate < b.dueDate) : (a.dueDate > b.dueDate)
-        }
-
-        return result
-    }
-
-    private func binding(for task: Task) -> Binding<Task> {
-        
-        guard let index = taskStore.tasks.firstIndex(where: { $0.id == task.id }) else {
+        return result.sorted {
             
-            return .constant(task)
+            guard let a = $0.dueDate, let b = $1.dueDate else { return false }
+            return sortAscending ? (a < b) : (a > b)
         }
-        
-        return $taskStore.tasks[index]
     }
 }
 
@@ -265,6 +263,6 @@ struct TasksView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        TasksView().environmentObject(TaskStore())
+        TasksView().environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
     }
 }
