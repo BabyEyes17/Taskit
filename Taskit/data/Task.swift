@@ -20,24 +20,19 @@ struct Task: Identifiable, Codable, Equatable {
     
     var tags: [String]
     
-    init (
-        
+    init(
         id: UUID = UUID(),
         title: String,
         description: String = "",
         category: String,
         dueDate: Date,
-        
         notificationsEnabled: Bool = false,
         notifyBeforeMinutes: Int? = nil,
-        
         repeatRule: RepeatRule = .none,
-        
         isCompleted: Bool = false,
         isFavourite: Bool = false,
-        
         tags: [String] = []
-    ){
+    ) {
         self.id = id
         self.title = title
         self.description = description
@@ -53,12 +48,11 @@ struct Task: Identifiable, Codable, Equatable {
 }
 
 enum RepeatRule: String, CaseIterable, Identifiable, Codable {
-    
-    case none = "Never"
-    case daily = "Daily"
-    case weekly = "Weekly"
+    case none    = "Never"
+    case daily   = "Daily"
+    case weekly  = "Weekly"
     case monthly = "Monthly"
-    case yearly = "Yearly"
+    case yearly  = "Yearly"
     
     var id: String { rawValue }
 }

@@ -9,38 +9,43 @@ struct TaskDetailActions: View {
     let onDelete: () -> Void
 
     var body: some View {
-
         VStack(spacing: 10) {
 
             HStack {
-
                 Button { onEdit() } label: {
-                    
                     Text("Edit").frame(maxWidth: .infinity)
                 }
 
+                Divider()
+                    .frame(height: 22)
+
                 Button { isCompleted.toggle() } label: {
-                    
-                    Text(isCompleted ? "Mark Incomplete" : "Mark Completed").frame(maxWidth: .infinity)
+                    Text(isCompleted ? "Mark Incomplete" : "Mark Completed")
+                        .frame(maxWidth: .infinity)
                 }
             }
-            
             .font(.system(size: 17, weight: .semibold))
             .foregroundStyle(.blue)
 
             Divider()
 
             Button { onDelete() } label: {
-                
                 Text("Delete")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.red)
                     .frame(maxWidth: .infinity)
             }
-            
             .padding(.top, 4)
         }
-        
         .padding(.horizontal, 8)
     }
+}
+
+#Preview {
+    TaskDetailActions(
+        isCompleted: .constant(false),
+        onEdit:   { print("Edit") },
+        onDelete: { print("Delete") }
+    )
+    .padding()
 }

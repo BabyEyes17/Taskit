@@ -10,7 +10,6 @@ struct TaskDetailRow: View {
     var useSecondaryText: Bool = false
 
     var body: some View {
-
         HStack(alignment: .top, spacing: 12) {
 
             Image(systemName: icon)
@@ -26,8 +25,12 @@ struct TaskDetailRow: View {
 
             Spacer(minLength: 0)
         }
-        
         .padding(.vertical, 12)
         .padding(.horizontal, 16)
     }
+}
+
+#Preview {
+    TaskDetailRow(icon: "clock", title: "Sunday, January 25th - 9:00 AM")
+        .padding()
 }
