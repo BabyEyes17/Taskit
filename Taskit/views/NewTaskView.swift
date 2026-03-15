@@ -2,10 +2,11 @@
 // Integrated with TaskStore by Jayden Lewis on 08/02/2026
 
 import SwiftUI
+import CoreData
 
 struct NewTaskView: View {
 
-    @EnvironmentObject var taskStore: TaskStore
+    @Environment(\.managedObjectContext) private var context
     @Environment(\.dismiss) private var dismiss
 
     @State private var title            = ""
@@ -26,23 +27,16 @@ struct NewTaskView: View {
         notifyBefore != "None"
     }
 
-    private var notifyBeforeMinutes: Int? {
+    private var notifyBeforeMinutes: Int16 {
         switch notifyBefore {
         case "5 Minutes Before":  return 5
         case "15 Minutes Before": return 15
         case "1 Hour Before":     return 60
-        default:                  return nil
+        default:                  return 0
         }
     }
 
-    private var repeatRule: RepeatRule {
-        switch repeatOption {
-        case "Daily":   return .daily
-        case "Weekly":  return .weekly
-        case "Monthly": return .monthly
-        default:        return .none
-        }
-    }
+    private var repeatRule: String { repeatOption }
 
     // MARK: - Body
 
@@ -220,27 +214,24 @@ struct NewTaskView: View {
         let trimmed = title.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
 
-        let newTask = TaskItem(
+        TaskRepository.addTask(
             title: trimmed,
-            description: description,
+            taskDescription: description,
             category: selectedCategory,
             dueDate: dueDate,
             notificationsEnabled: notificationsEnabled,
             notifyBeforeMinutes: notifyBeforeMinutes,
             repeatRule: repeatRule,
-            tags: tags
-        )
-
-        taskStore.addTask(newTask)
+            tags: tags,
+            context: context)
+        
         dismiss()
     }
 }
 
-// MARK: - Preview
-
+// Mark: - Preview
 #Preview {
     NavigationStack {
-        NewTaskView()
-            .environmentObject(TaskStore())
+        NewTaskView().environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
     }
 }

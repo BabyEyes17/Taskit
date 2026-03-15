@@ -4,15 +4,14 @@ import SwiftUI
 
 @main
 struct TaskitApp: App {
-
-    @StateObject private var taskStore = TaskStore()
+    
+    let persistence = PersistenceController.shared
 
     var body: some Scene {
 
         WindowGroup {
-
-            TasksView()
-                .environmentObject(taskStore)
+            
+            TasksView().environment(\.managedObjectContext, persistence.container.viewContext)
         }
     }
 }

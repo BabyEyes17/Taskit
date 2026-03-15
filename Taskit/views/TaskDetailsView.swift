@@ -2,12 +2,14 @@
 // TaskDetailsView.swift
 
 import SwiftUI
+import CoreData
 
 struct TaskDetailsView: View {
 
-    @EnvironmentObject var taskStore: TaskStore
+    @Environment(\.managedObjectContext) private var context
     @Environment(\.dismiss) private var dismiss
-    @Binding var task: TaskItem
+    
+    @ObservedObject var task: TaskEntity
 
     @State private var showEditSheet    = false
     @State private var showDeleteAlert  = false
@@ -34,29 +36,35 @@ struct TaskDetailsView: View {
                 }
 
                 // Title
-                Text(task.title)
+                Text(task.title ?? "Untitled")
                     .font(.system(size: 34, weight: .bold))
                     .padding(.top, 4)
 
                 // Detail card
                 TaskDetailCard(
-                    category: task.category,
-                    description: task.description,
-                    dueDateText: task.dueDate.formattedDueDate(),
+                    category: task.category ?? "General",
+                    description: task.taskDescription ?? "",
+                    dueDateText: task.dueDate?.formattedDueDate() ?? "No due date",
                     notificationText: notificationText,
                     repeatText: repeatText,
-                    tags: task.tags
+                    tags: task.tags as? [String] ?? []
                 )
 
                 // Actions
                 TaskDetailActions(
-                    isCompleted: $task.isCompleted,
-                    onEdit: {
-                        showEditSheet = true
-                    },
-                    onDelete: {
-                        showDeleteAlert = true
-                    }
+                    
+                    isCompleted: Binding(
+                        
+                        get: { task.isCompleted },
+                        
+                        set: { _ in
+                            TaskRepository.toggleCompleted(task, context: context)
+                        }
+                    ),
+                    
+                    onEdit: { showEditSheet = true },
+                    
+                    onDelete: { showDeleteAlert = true }
                 )
 
                 Spacer()
@@ -66,13 +74,14 @@ struct TaskDetailsView: View {
         }
         .navigationBarBackButtonHidden(true)
         .sheet(isPresented: $showEditSheet) {
+            
             // TODO: EditTaskView — reuse NewTaskView pre-filled
             Text("Edit Task — coming soon")
                 .padding()
         }
         .alert("Delete Task", isPresented: $showDeleteAlert) {
             Button("Delete", role: .destructive) {
-                taskStore.deleteTask(task)
+                TaskRepository.deleteTask(task, context: context)
                 dismiss()
             }
             Button("Cancel", role: .cancel) {}
@@ -85,26 +94,43 @@ struct TaskDetailsView: View {
 
     private var notificationText: String {
         guard task.notificationsEnabled else { return "Notifications off" }
-        if let minutes = task.notifyBeforeMinutes {
-            return "Notify me \(minutes.minutesToFriendlyString()) before"
-        }
-        return "Notifications on"
+        
+        let minutes = task.notifyBeforeMinutes
+            
+        return minutes > 0
+            ? "Notify me \(Int(minutes).minutesToFriendlyString()) before"
+            : "Notifications on"
     }
 
     private var repeatText: String {
-        task.repeatRule == .none
-            ? "Repeat: Never"
-            : "Repeat: \(task.repeatRule.rawValue)"
+        
+        guard let rule = task.repeatRule, rule != "Does Not Repeat" else { return "Repeat: Never" }
+        
+        return "Repeat: \(rule)"
     }
 }
 
 // MARK: - Preview
 
 #Preview {
-    let store = TaskStore()
-    @State var task = store.tasks[0]
+    
+    let context = PersistenceController.shared.container.viewContext
+    
+    let sample = TaskEntity(context: context)
+    
+    sample.id = UUID()
+    sample.title = "Finish debugging code"
+    sample.taskDescription = ""
+    sample.category = "Work"
+    sample.dueDate = Date().addingTimeInterval(3600)
+    sample.notificationsEnabled = true
+    sample.notifyBeforeMinutes = 60
+    sample.repeatRule = "Does Not Repeat"
+    sample.tags = ["Programming", "Easy"] as NSArray
+    sample.isCompleted = false
+    sample.isFavourite = false
+    
     return NavigationStack {
-        TaskDetailsView(task: $task)
-            .environmentObject(store)
+        TaskDetailsView(task: sample).environment(\.managedObjectContext, context)
     }
 }

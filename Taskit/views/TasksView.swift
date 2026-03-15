@@ -4,14 +4,21 @@ import SwiftUI
 
 struct TasksView: View {
 
-    @EnvironmentObject var taskStore: TaskStore
-
-    @State private var selectedCategory : String = "General"
-    @State private var favouritesOnly   : Bool   = false
-    @State private var sortAscending    : Bool   = true
-    @State private var goToNewTask      : Bool   = false
-    @State private var searchText       : String = ""
-    @State private var showSearch       : Bool   = false
+    @Environment(\.managedObjectContext) private var context
+   
+    @FetchRequest(
+        sortDescriptors: [SortDescriptor(\.dueDate, order: .forward)],
+        animation: .default
+    )
+   
+    private var tasks: FetchedResults<TaskEntity>
+   
+    @State private var selectedCategory: String = "General"
+    @State private var favouritesOnly: Bool = false
+    @State private var sortAscending: Bool = true
+    @State private var showNewTask: Bool = false
+    @State private var searchText: String = ""
+    @State private var showSearch: Bool = false
 
     // MARK: - Body
 
@@ -20,28 +27,31 @@ struct TasksView: View {
         NavigationStack {
 
             ZStack {
-
+               
                 Color(.systemGroupedBackground).ignoresSafeArea()
-
+               
                 VStack(alignment: .leading, spacing: 14) {
-
-                    // ── Header ──────────────────────────────────────────────
+                   
+                    // MARK: - TasksView Header
                     HStack {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Tasks")
-                                .font(.system(size: 40, weight: .bold))
-                            if !taskStore.tasks.isEmpty {
-                                Text("\(filteredAndSortedTasks.count) task\(filteredAndSortedTasks.count == 1 ? "" : "s")")
-                                    .font(.system(size: 14))
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
                         Spacer()
+                        Button {
+                            withAnimation(.spring(response: 0.35)) { showSearch.toggle() }
+                            if !showSearch { searchText = "" }
+                        } label: {
+                            Image(systemName: showSearch ? "xmark" : "magnifyingglass")
+                                .font(.system(size: 16, weight: .semibold))
+                                .frame(width: 42, height: 42)
+                                .background(Color(.systemBackground))
+                                .clipShape(Circle())
+                                .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
+                        }
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
 
-                    // Search bar (shown when toggled)
+                    // MARK: - Search Bar
+                    // (shown when toggled)
                     if showSearch {
                         HStack {
                             Image(systemName: "magnifyingglass")
@@ -63,19 +73,31 @@ struct TasksView: View {
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
 
-                    // ── Category chip row ────────────────────────────────────
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Tasks")
+                            .font(.system(size: 40, weight: .bold))
+                        if !tasks.isEmpty {
+                            Text("\(filteredAndSortedTasks.count) task\(filteredAndSortedTasks.count == 1 ? "" : "s")")
+                                .font(.system(size: 14))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 4)
+                   
+                    // MARK: - Category Chips
                     HStack(spacing: 10) {
-
+                       
                         Button { withAnimation { favouritesOnly.toggle() } } label: {
-                            Image(systemName: favouritesOnly ? "star.fill" : "star")
+                            Image(systemName: "star.fill")
                                 .font(.system(size: 18, weight: .semibold))
-                                .foregroundStyle(favouritesOnly ? .yellow : .primary)
+                                .foregroundStyle(favouritesOnly ? .blue : .gray)
                                 .frame(width: 42, height: 42)
                                 .background(Color(.systemBackground))
                                 .clipShape(Circle())
                                 .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
                         }
-
+                       
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 10) {
                                 ForEach(categories, id: \.self) { category in
@@ -91,31 +113,34 @@ struct TasksView: View {
                         }
                     }
                     .padding(.horizontal, 20)
-
-                    // ── Task list card ───────────────────────────────────────
+                   
+                    // MARK: Task List Card
                     VStack(spacing: 0) {
-
+                       
                         // Card header
                         HStack {
                             Text(selectedCategory)
                                 .font(.system(size: 17, weight: .semibold))
-
+                           
                             Spacer()
-
+                           
                             Text("Date")
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundStyle(.secondary)
-
+                           
                             Button { withAnimation { sortAscending.toggle() } } label: {
-                                Image(systemName: sortAscending ? "arrow.up.arrow.down" : "arrow.down.arrow.up")
+                                Image(systemName: "arrow.up.arrow.down")
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundStyle(.blue)
+                                    .rotationEffect(.degrees(sortAscending ? 0 : 180))
                             }
                             .padding(.leading, 2)
-
+                           
                             Button {
-                                // TODO: list display options
-                            } label: {
+                                // TODO: List Sorting Options
+                            }
+                           
+                            label: {
                                 Image(systemName: "line.3.horizontal")
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundStyle(.blue)
@@ -124,21 +149,16 @@ struct TasksView: View {
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
-
+                       
                         Divider().padding(.leading, 16)
-
+                       
                         // Task rows
-                        if filteredAndSortedTasks.isEmpty {
-                            emptyStateView
-                        } else {
-                            VStack(spacing: 0) {
-                                ForEach(filteredAndSortedTasks) { task in
-                                    TaskRow(task: binding(for: task))
-                                        .padding(.horizontal, 16)
-                                        .padding(.vertical, 12)
-
-                                    Divider().padding(.leading, 16)
-                                }
+                        VStack(spacing: 0) {
+                            ForEach(filteredAndSortedTasks) { task in
+                                TaskRow(task: task)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 12)
+                                Divider().padding(.leading, 16)
                             }
                         }
                     }
@@ -146,37 +166,16 @@ struct TasksView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     .shadow(color: .black.opacity(0.05), radius: 14, x: 0, y: 6)
                     .padding(.horizontal, 20)
-
+                   
                     Spacer(minLength: 0)
                 }
 
-                // ── Floating search button ───────────────────────────────────
-                VStack {
-                    HStack {
-                        Spacer()
-                        Button {
-                            withAnimation(.spring(response: 0.35)) { showSearch.toggle() }
-                            if !showSearch { searchText = "" }
-                        } label: {
-                            Image(systemName: showSearch ? "xmark" : "magnifyingglass")
-                                .font(.system(size: 16, weight: .semibold))
-                                .frame(width: 42, height: 42)
-                                .background(Color(.systemBackground))
-                                .clipShape(Circle())
-                                .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
-                        }
-                        .padding(.trailing, 18)
-                        .padding(.top, 10)
-                    }
-                    Spacer()
-                }
-
-                // ── Floating create button ───────────────────────────────────
+                // MARK: - Floating Create Button
                 VStack {
                     Spacer()
                     HStack {
                         Spacer()
-                        Button { goToNewTask = true } label: {
+                        Button { showNewTask = true } label: {
                             Image(systemName: "plus")
                                 .font(.system(size: 20, weight: .semibold))
                                 .frame(width: 52, height: 52)
@@ -189,12 +188,11 @@ struct TasksView: View {
                     }
                 }
             }
-            .navigationBarHidden(true)
-            .navigationDestination(isPresented: $goToNewTask) {
-                NewTaskView().environmentObject(taskStore)
+            .toolbar(.hidden, for: .navigationBar)
+            .sheet(isPresented: $showNewTask) {
+                NewTaskView().environment(\.managedObjectContext, context)
             }
         }
-        .animation(.default, value: filteredAndSortedTasks.count)
     }
 
     // MARK: - Empty state
@@ -213,12 +211,11 @@ struct TasksView: View {
     }
 }
 
-// MARK: - Helpers
-
+// Helpers
 extension TasksView {
 
     private var categories: [String] {
-        let cats   = Set(taskStore.tasks.map { $0.category })
+        let cats = Set(tasks.compactMap { $0.category })
         let sorted = cats.sorted()
         if sorted.contains("General") {
             return ["General"] + sorted.filter { $0 != "General" }
@@ -226,8 +223,8 @@ extension TasksView {
         return sorted
     }
 
-    private var filteredAndSortedTasks: [TaskItem] {
-        var result = taskStore.tasks
+    private var filteredAndSortedTasks: [TaskEntity] {
+        var result = tasks.filter { $0.category == selectedCategory }
 
         // Guard selected category
         if !categories.contains(selectedCategory), let first = categories.first {
@@ -240,31 +237,17 @@ extension TasksView {
             result = result.filter { $0.isFavourite }
         }
 
-        if !searchText.isEmpty {
-            result = result.filter {
-                $0.title.localizedCaseInsensitiveContains(searchText) ||
-                $0.description.localizedCaseInsensitiveContains(searchText)
-            }
+        // Sort by due date
+        return result.sorted {
+            guard let a = $0.dueDate, let b = $1.dueDate else { return false }
+            return sortAscending ? (a < b) : (a > b)
         }
-
-        result.sort { a, b in
-            sortAscending ? (a.dueDate < b.dueDate) : (a.dueDate > b.dueDate)
-        }
-
-        return result
-    }
-
-    func binding(for task: TaskItem) -> Binding<TaskItem> {
-        guard let index = taskStore.tasks.firstIndex(where: { $0.id == task.id }) else {
-            return .constant(task)
-        }
-        return $taskStore.tasks[index]
     }
 }
 
-// MARK: - Preview
-
-#Preview {
-    TasksView()
-        .environmentObject(TaskStore())
+// Preview
+struct TasksView_Previews: PreviewProvider {
+    static var previews: some View {
+        TasksView().environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+    }
 }
