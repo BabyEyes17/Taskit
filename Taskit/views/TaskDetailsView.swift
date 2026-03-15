@@ -86,7 +86,7 @@ struct TaskDetailsView: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Are you sure you want to delete \"\(task.title)\"? This cannot be undone.")
+            Text("Are you sure you want to delete \(task.title ?? "this task")? This cannot be undone.")
         }
     }
 
