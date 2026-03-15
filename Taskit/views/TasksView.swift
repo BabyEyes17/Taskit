@@ -16,42 +16,89 @@ struct TasksView: View {
     @State private var selectedCategory: String = "General"
     @State private var favouritesOnly: Bool = false
     @State private var sortAscending: Bool = true
-    @State private var goToNewTask: Bool = false
+    @State private var showNewTask: Bool = false
+    @State private var searchText: String = ""
+    @State private var showSearch: Bool = false
+
+    // MARK: - Body
 
     var body: some View {
-        
+
         NavigationStack {
-            
+
             ZStack {
-                
+
                 Color(.systemGroupedBackground).ignoresSafeArea()
 
                 VStack(alignment: .leading, spacing: 14) {
 
-
-
-                    // Header
+                    // ── Header ──────────────────────────────────────────────
                     HStack {
-                        Text("Tasks")
-                            .font(.system(size: 40, weight: .bold))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Tasks")
+                                .font(.system(size: 40, weight: .bold))
+                            if !tasks.isEmpty {
+                                Text("\(filteredAndSortedTasks.count) task\(filteredAndSortedTasks.count == 1 ? "" : "s")")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        
                         Spacer()
+                        
+                        // MARK: - Floating Search Button
+                        VStack {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    withAnimation(.spring(response: 0.35)) { showSearch.toggle() }
+                                    if !showSearch { searchText = "" }
+                                } label: {
+                                    Image(systemName: showSearch ? "xmark" : "magnifyingglass")
+                                        .font(.system(size: 16, weight: .semibold))
+                                        .frame(width: 42, height: 42)
+                                        .background(Color(.systemBackground))
+                                        .clipShape(Circle())
+                                        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
+                                }
+                                .padding(.trailing, 18)
+                                .padding(.top, 10)
+                            }
+                            Spacer()
+                        }
                     }
-                    
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
 
+                    // Search bar (shown when toggled)
+                    if showSearch {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundStyle(.secondary)
+                            TextField("Search tasks…", text: $searchText)
+                                .font(.system(size: 16))
+                            if !searchText.isEmpty {
+                                Button { searchText = "" } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .padding(10)
+                        .background(Color(.systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
+                        .padding(.horizontal, 20)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
 
-
-                    // Category chips row
+                    // MARK: - Category Chips
                     HStack(spacing: 10) {
 
-                        // Favourites filter button
-                        Button { favouritesOnly.toggle() }
-                        
-                        label: {
-                            
+                        Button { withAnimation { favouritesOnly.toggle() } } label: {
                             Image(systemName: favouritesOnly ? "star.fill" : "star")
                                 .font(.system(size: 18, weight: .semibold))
+                                .foregroundStyle(favouritesOnly ? .yellow : .primary)
                                 .frame(width: 42, height: 42)
                                 .background(Color(.systemBackground))
                                 .clipShape(Circle())
@@ -59,33 +106,26 @@ struct TasksView: View {
                         }
 
                         ScrollView(.horizontal, showsIndicators: false) {
-                            
                             HStack(spacing: 10) {
-                                
                                 ForEach(categories, id: \.self) { category in
-                                    
-                                    // Using the CategoryChip component
                                     CategoryChip(
                                         title: category,
                                         isSelected: category == selectedCategory
-                                    ) { selectedCategory = category }
+                                    ) {
+                                        selectedCategory = category
+                                    }
                                 }
                             }
-                            
                             .padding(.vertical, 2)
                         }
                     }
-                    
                     .padding(.horizontal, 20)
 
-
-
-                    // Main card
+                    // MARK: Task List Card
                     VStack(spacing: 0) {
 
-                        // Card header row
+                        // Card header
                         HStack {
-                            
                             Text(selectedCategory)
                                 .font(.system(size: 17, weight: .semibold))
 
@@ -95,14 +135,11 @@ struct TasksView: View {
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundStyle(.secondary)
 
-                            Button { sortAscending.toggle() }
-                            
-                            label: {
+                            Button { withAnimation { sortAscending.toggle() } } label: {
                                 Image(systemName: sortAscending ? "arrow.up.arrow.down" : "arrow.down.arrow.up")
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundStyle(.blue)
                             }
-
                             .padding(.leading, 2)
 
                             Button {
@@ -111,15 +148,13 @@ struct TasksView: View {
                             }
 
                             label: {
-                                
+
                                 Image(systemName: "line.3.horizontal")
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundStyle(.blue)
                             }
-
                             .padding(.leading, 6)
                         }
-
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
 
@@ -132,12 +167,11 @@ struct TasksView: View {
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 12)
 
-                                Divider()
-                                    .padding(.leading, 16)
+                                    Divider().padding(.leading, 16)
+                                }
                             }
                         }
                     }
-
                     .background(Color(.systemBackground))
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     .shadow(color: .black.opacity(0.05), radius: 14, x: 0, y: 6)
@@ -146,48 +180,12 @@ struct TasksView: View {
                     Spacer(minLength: 0)
                 }
 
-                // Floating search button (top-right)
+                // MARK: - Floating Create Button
                 VStack {
-                    
-                    HStack {
-                        
-                        Spacer()
-                        
-                        Button {
-                            
-                            // TODO: search UI
-                        }
-                        
-                        label: {
-                            
-                            Image(systemName: "magnifyingglass")
-                                .font(.system(size: 16, weight: .semibold))
-                                .frame(width: 42, height: 42)
-                                .background(Color(.systemBackground))
-                                .clipShape(Circle())
-                                .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
-                        }
-
-                        .padding(.trailing, 18)
-                        .padding(.top, 10)
-                    }
-                    
                     Spacer()
-                }
-
-                // Floating create button
-                VStack {
-                    
-                    Spacer()
-                    
                     HStack {
-                        
                         Spacer()
-                        
-                        Button { goToNewTask = true }
-                        
-                        label: {
-                            
+                        Button { showNewTask = true } label: {
                             Image(systemName: "plus")
                                 .font(.system(size: 20, weight: .semibold))
                                 .frame(width: 52, height: 52)
@@ -195,20 +193,32 @@ struct TasksView: View {
                                 .clipShape(Circle())
                                 .shadow(color: .black.opacity(0.15), radius: 14, x: 0, y: 8)
                         }
-                        
                         .padding(.trailing, 22)
                         .padding(.bottom, 22)
                     }
                 }
             }
-            
-            .navigationBarHidden(true)
-            .navigationDestination(isPresented: $goToNewTask) { NewTaskView() }
+            .toolbar(.hidden, for: .navigationBar)
+            .sheet(isPresented: $showNewTask) {
+                NewTaskView().environment(\.managedObjectContext, context)
+            }
         }
+
+    // MARK: - Empty state
+
+    private var emptyStateView: some View {
+        VStack(spacing: 10) {
+            Image(systemName: favouritesOnly ? "star.slash" : "checkmark.circle")
+                .font(.system(size: 32))
+                .foregroundStyle(.secondary)
+            Text(favouritesOnly ? "No favourites yet" : "No tasks here")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 36)
     }
 }
-
-
 
 // Helpers
 extension TasksView {
@@ -216,17 +226,11 @@ extension TasksView {
     private var categories: [String] {
         
         let cats = Set(tasks.compactMap { $0.category })
+        
         let sorted = cats.sorted()
-
         if sorted.contains("General") {
-            
             return ["General"] + sorted.filter { $0 != "General" }
         }
-
-        if selectedCategory.isEmpty, let first = sorted.first {
-            return [first] + sorted.dropFirst()
-        }
-
         return sorted
     }
 
@@ -234,18 +238,17 @@ extension TasksView {
         
         var result = tasks.filter { $0.category == selectedCategory }
 
-        // Ensure selectedCategory is valid
+        // Guard selected category
         if !categories.contains(selectedCategory), let first = categories.first {
             selectedCategory = first
         }
 
-        // Filter by selected category
         result = result.filter { $0.category == selectedCategory }
 
-        // Favourites filter
         if favouritesOnly {
             result = result.filter { $0.isFavourite }
         }
+
 
         // Sort by due date
         return result.sorted {
@@ -255,8 +258,6 @@ extension TasksView {
         }
     }
 }
-
-
 
 // Preview
 struct TasksView_Previews: PreviewProvider {

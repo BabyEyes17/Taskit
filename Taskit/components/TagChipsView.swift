@@ -7,7 +7,6 @@ struct TagChipsView: View {
     let tags: [String]
 
     private let columns: [GridItem] = [
-        
         GridItem(.adaptive(minimum: 86), spacing: 8)
     ]
 
@@ -26,19 +25,16 @@ struct TagChipsView: View {
                     .font(.system(size: 16))
                     .foregroundStyle(.secondary)
 
-            }
-            
-            else {
+            } else {
 
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
-                    
+
                     ForEach(tags, id: \.self) { tag in
-                        
                         Text(tag)
                             .font(.system(size: 14, weight: .medium))
                             .padding(.vertical, 6)
                             .padding(.horizontal, 12)
-                            .background(Color(red: 242/255, green: 242/255, blue: 247/255))
+                            .background(Color(.systemGroupedBackground))
                             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     }
                 }
@@ -46,8 +42,16 @@ struct TagChipsView: View {
 
             Spacer(minLength: 0)
         }
-        
         .padding(.vertical, 12)
         .padding(.horizontal, 16)
+    }
+}
+
+// MARK: - Preview
+
+#Preview {
+    VStack {
+        TagChipsView(tags: ["Swift", "iOS 26", "SwiftUI"])
+        TagChipsView(tags: [])
     }
 }

@@ -15,32 +15,38 @@ struct TaskDetailActions: View {
             HStack {
 
                 Button { onEdit() } label: {
-                    
                     Text("Edit").frame(maxWidth: .infinity)
                 }
 
                 Button { isCompleted.toggle() } label: {
-                    
-                    Text(isCompleted ? "Mark Incomplete" : "Mark Completed").frame(maxWidth: .infinity)
+                    Text(isCompleted ? "Mark Incomplete" : "Mark Completed")
+                        .frame(maxWidth: .infinity)
                 }
             }
-            
             .font(.system(size: 17, weight: .semibold))
             .foregroundStyle(.blue)
 
             Divider()
 
             Button { onDelete() } label: {
-                
                 Text("Delete")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.red)
                     .frame(maxWidth: .infinity)
             }
-            
             .padding(.top, 4)
         }
-        
         .padding(.horizontal, 8)
     }
+}
+
+// MARK: - Preview
+
+#Preview {
+    TaskDetailActions(
+        isCompleted: .constant(false),
+        onEdit: {},
+        onDelete: {}
+    )
+    .padding()
 }

@@ -56,6 +56,6 @@ struct TaskRepository {
     static func save(context: NSManagedObjectContext) {
         
         guard context.hasChanges else { return }
-        try? context.save
+        try? context.save()
     }
 }

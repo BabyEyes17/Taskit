@@ -6,9 +6,9 @@ import SwiftUI
 struct TaskitApp: App {
     
     let persistence = PersistenceController.shared
-    
+
     var body: some Scene {
-        
+
         WindowGroup {
             
             TasksView().environment(\.managedObjectContext, persistence.container.viewContext)
