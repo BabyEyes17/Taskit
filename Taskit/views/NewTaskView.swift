@@ -18,7 +18,7 @@ struct NewTaskView: View {
     @State private var repeatOption     = "Does Not Repeat"
     @State private var tags: [String]   = []
 
-    let notificationOptions = ["None", "5 Minutes Before", "15 Minutes Before", "1 Hour Before"]
+    let notificationOptions = ["None", "5 Minutes Before", "15 Minutes Before", "30 Minutes Before", "1 Hour Before"]
     let repeatOptions       = ["Does Not Repeat", "Daily", "Weekly", "Monthly"]
 
     // MARK: - Derived helpers
@@ -31,6 +31,7 @@ struct NewTaskView: View {
         switch notifyBefore {
         case "5 Minutes Before":  return 5
         case "15 Minutes Before": return 15
+        case "30 Minutes Before": return 30
         case "1 Hour Before":     return 60
         default:                  return 0
         }

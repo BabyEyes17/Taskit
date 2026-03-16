@@ -52,7 +52,7 @@ struct EditTaskView: View {
     // MARK: - Body
     var body: some View {
         ZStack {
-            Color(\.systemGroupedBackground).ignoresSafeArea()
+            Color(.systemGroupedBackground).ignoresSafeArea()
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
@@ -266,3 +266,4 @@ struct EditTaskView: View {
         EditTaskView(task: sample).environment(\.managedObjectContext, context)
     }
 }
+

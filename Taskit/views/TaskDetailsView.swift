@@ -74,10 +74,8 @@ struct TaskDetailsView: View {
         }
         .navigationBarBackButtonHidden(true)
         .sheet(isPresented: $showEditSheet) {
-            
-            // TODO: EditTaskView — reuse NewTaskView pre-filled
-            Text("Edit Task — coming soon")
-                .padding()
+            EditTaskView(task: task)
+                .environment(\.managedObjectContext, context)
         }
         .alert("Delete Task", isPresented: $showDeleteAlert) {
             Button("Delete", role: .destructive) {
@@ -134,3 +132,4 @@ struct TaskDetailsView: View {
         TaskDetailsView(task: sample).environment(\.managedObjectContext, context)
     }
 }
+
