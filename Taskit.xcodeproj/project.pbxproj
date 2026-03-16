@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		40AC73372F6793B600701BC2 /* EditTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AC73362F6793B600701BC2 /* EditTaskView.swift */; };
 		987C12A82F64C1AA00A1794A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987C12A72F64C19E00A1794A /* PersistenceController.swift */; };
 		987C12AF2F64C58400A1794A /* Taskit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 987C12AD2F64C58400A1794A /* Taskit.xcdatamodeld */; };
 		B27F35192F624D6300ADA5D5 /* TaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F35182F624D6300ADA5D5 /* TaskRow.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		40AC73362F6793B600701BC2 /* EditTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskView.swift; sourceTree = "<group>"; };
 		987C12A72F64C19E00A1794A /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		987C12AE2F64C58400A1794A /* Taskit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Taskit.xcdatamodel; sourceTree = "<group>"; };
 		B27F35182F624D6300ADA5D5 /* TaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRow.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				B28324752F624AB500B633F8 /* TaskDetailCard.swift */,
 				B28324772F624ADE00B633F8 /* TaskDetailRow.swift */,
 				B27F35182F624D6300ADA5D5 /* TaskRow.swift */,
+				40AC73362F6793B600701BC2 /* EditTaskView.swift */,
 			);
 			path = components;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B28324742F624A6D00B633F8 /* TaskDetailActions.swift in Sources */,
+				40AC73372F6793B600701BC2 /* EditTaskView.swift in Sources */,
 				B27F35282F624F1300ADA5D5 /* TasksView.swift in Sources */,
 				B27F351C2F624DA000ADA5D5 /* DateFormatting.swift in Sources */,
 				B27F35262F624EEE00ADA5D5 /* TaskRepository.swift in Sources */,
