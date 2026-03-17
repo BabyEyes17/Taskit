@@ -4,11 +4,13 @@
 import SwiftUI
 import CoreData
 
-struct NewTaskView: View {
 
+struct NewTaskView: View {
     @Environment(\.managedObjectContext) private var context
     @Environment(\.dismiss) private var dismiss
 
+
+    // MARK: - Task Fields
     @State private var title            = ""
     @State private var description      = ""
     @State private var selectedCategory = "General"
@@ -16,16 +18,19 @@ struct NewTaskView: View {
     @State private var dueDate          = Date()
     @State private var notifyBefore     = "15 Minutes Before"
     @State private var repeatOption     = "Does Not Repeat"
-    @State private var tags: [String]   = []
+    @State private var tags: [String] = UserDefaults.standard.stringArray(forKey: "SavedTags") ?? ["Work", "School", "Personal"]
+    @State private var selectedTags: [String] = []
 
+	
     let notificationOptions = ["None", "5 Minutes Before", "15 Minutes Before", "30 Minutes Before", "1 Hour Before"]
     let repeatOptions       = ["Does Not Repeat", "Daily", "Weekly", "Monthly"]
 
-    // MARK: - Derived helpers
 
+    // MARK: - Derived helpers
     private var notificationsEnabled: Bool {
         notifyBefore != "None"
     }
+
 
     private var notifyBeforeMinutes: Int16 {
         switch notifyBefore {
@@ -37,20 +42,16 @@ struct NewTaskView: View {
         }
     }
 
+
     private var repeatRule: String { repeatOption }
 
+
     // MARK: - Body
-
     var body: some View {
-
         ZStack {
-
             Color(.systemGroupedBackground).ignoresSafeArea()
-
             ScrollView {
-
                 VStack(alignment: .leading, spacing: 14) {
-
                     // Back button
                     HStack {
                         Button { dismiss() } label: {
@@ -65,6 +66,7 @@ struct NewTaskView: View {
                     }
                     .padding(.horizontal, 20)
 
+
                     // Heading
                     HStack {
                         Text("New Task")
@@ -74,9 +76,9 @@ struct NewTaskView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
 
+
                     // Form card
                     VStack(alignment: .leading, spacing: 0) {
-
                         // Title
                         TextField("Add Title", text: $title)
                             .font(.system(size: 16))
@@ -86,6 +88,7 @@ struct NewTaskView: View {
                             .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
                             .padding(.horizontal, 20)
                             .accessibilityLabel("Task Title")
+
 
                         // Category picker
                         HStack {
@@ -105,6 +108,7 @@ struct NewTaskView: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 10)
 
+
                         // Description
                         TextField("Description", text: $description, axis: .vertical)
                             .lineLimit(3...6)
@@ -116,6 +120,7 @@ struct NewTaskView: View {
                             .padding(.horizontal, 20)
                             .padding(.top, 10)
                             .accessibilityLabel("Task Description")
+
 
                         // Due date + time
                         VStack(spacing: 0) {
@@ -130,6 +135,7 @@ struct NewTaskView: View {
                         .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
                         .padding(.horizontal, 20)
                         .padding(.top, 10)
+
 
                         // Notify me
                         HStack {
@@ -149,6 +155,7 @@ struct NewTaskView: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 10)
 
+
                         // Repeat
                         HStack {
                             Text("Repeat")
@@ -167,14 +174,15 @@ struct NewTaskView: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 10)
 
-                        // Tags placeholder
-                        NavigationLink(destination: Text("Tag selection screen")) {
+
+                        // Tags
+                        NavigationLink(destination: TagSelectionView(tags: $tags, selectedTags: $selectedTags)) {
                             HStack {
                                 Text("Tags")
                                     .font(.system(size: 16))
                                     .foregroundStyle(.primary)
                                 Spacer()
-                                Text(tags.isEmpty ? "No Tags Selected" : tags.joined(separator: ", "))
+                                Text(selectedTags.isEmpty ? "No Tags Selected" : selectedTags.joined(separator: ", "))
                                     .foregroundStyle(.secondary)
                                     .font(.system(size: 15))
                             }
@@ -185,6 +193,7 @@ struct NewTaskView: View {
                         }
                         .padding(.horizontal, 20)
                         .padding(.top, 10)
+	
 
                         // Create button
                         Button(action: createTask) {
@@ -207,13 +216,19 @@ struct NewTaskView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
+        .onChange(of: tags) { newTags in
+            UserDefaults.standard.set(newTags, forKey: "SavedTags")
+        }
+
+
     }
 
-    // MARK: - Actions
 
+    // MARK: - Actions
     private func createTask() {
         let trimmed = title.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
+
 
         TaskRepository.addTask(
             title: trimmed,
@@ -223,16 +238,23 @@ struct NewTaskView: View {
             notificationsEnabled: notificationsEnabled,
             notifyBeforeMinutes: notifyBeforeMinutes,
             repeatRule: repeatRule,
-            tags: tags,
-            context: context)
-        
+            tags: selectedTags,
+            context: context
+        )
+
+
         dismiss()
     }
 }
 
-// Mark: - Preview
+
+
+// MARK: - Preview
 #Preview {
     NavigationStack {
-        NewTaskView().environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+        NewTaskView()
+            .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
     }
 }
+
+

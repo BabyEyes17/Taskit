@@ -1,6 +1,8 @@
 // Authored by Jayden Lewis on 08/02/2026
 
 import SwiftUI
+import UIKit
+
 
 struct TaskDetailRow: View {
 
@@ -30,7 +32,7 @@ struct TaskDetailRow: View {
         .padding(.horizontal, 16)
     }
 }
-
+	
 // MARK: - Preview
 
 #Preview {

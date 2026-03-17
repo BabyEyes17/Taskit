@@ -1,4 +1,5 @@
 // Authored by Jayden Lewis on 04/02/2026
+// Hide/Show completed tasks added and Task search implimented by Aidan Repchik on 2026-03-16
 
 import SwiftUI
 
@@ -19,6 +20,7 @@ struct TasksView: View {
     @State private var showNewTask: Bool = false
     @State private var searchText: String = ""
     @State private var showSearch: Bool = false
+    @State private var showCompleted: Bool = true
 
     // MARK: - Body
 
@@ -97,6 +99,18 @@ struct TasksView: View {
                                 .clipShape(Circle())
                                 .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
                         }
+                        
+                        // Show/Hide Completed button
+                        Button { withAnimation { showCompleted.toggle() } } label: {
+                        Image(systemName: showCompleted ? "eye" : "eye.slash")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(showCompleted ? .blue : .gray)
+                        .frame(width: 42, height: 42)
+                        .background(Color(.systemBackground))
+                        .clipShape(Circle())
+                        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
+                        }
+
                        
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 10) {
@@ -190,8 +204,12 @@ struct TasksView: View {
             }
             .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showNewTask) {
-                NewTaskView().environment(\.managedObjectContext, context)
+                NavigationStack {
+                    NewTaskView()
+                        .environment(\.managedObjectContext, context)
+                }
             }
+
         }
     }
 
@@ -226,16 +244,32 @@ extension TasksView {
     private var filteredAndSortedTasks: [TaskEntity] {
         var result = tasks.filter { $0.category == selectedCategory }
 
+
         // Guard selected category
         if !categories.contains(selectedCategory), let first = categories.first {
             selectedCategory = first
         }
 
-        result = result.filter { $0.category == selectedCategory }
 
         if favouritesOnly {
             result = result.filter { $0.isFavourite }
         }
+
+
+        if !showCompleted {
+            result = result.filter { !$0.isCompleted }
+        }
+
+
+        // Filter by search text
+        if !searchText.trimmingCharacters(in: .whitespaces).isEmpty {
+            let lowercasedSearch = searchText.lowercased()
+            result = result.filter { task in
+                (task.title?.lowercased().contains(lowercasedSearch) ?? false) ||
+                (task.taskDescription?.lowercased().contains(lowercasedSearch) ?? false)
+            }
+        }
+
 
         // Sort by due date
         return result.sorted {
@@ -243,6 +277,7 @@ extension TasksView {
             return sortAscending ? (a < b) : (a > b)
         }
     }
+
 }
 
 // Preview
@@ -251,3 +286,4 @@ struct TasksView_Previews: PreviewProvider {
         TasksView().environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
     }
 }
+

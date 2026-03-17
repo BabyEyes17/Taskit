@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		40AC73372F6793B600701BC2 /* EditTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AC73362F6793B600701BC2 /* EditTaskView.swift */; };
+		410D87B32F6923DB00341B24 /* TagSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D87B22F6923BB00341B24 /* TagSelectionView.swift */; };
 		987C12A82F64C1AA00A1794A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987C12A72F64C19E00A1794A /* PersistenceController.swift */; };
 		987C12AF2F64C58400A1794A /* Taskit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 987C12AD2F64C58400A1794A /* Taskit.xcdatamodeld */; };
 		B27F35192F624D6300ADA5D5 /* TaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F35182F624D6300ADA5D5 /* TaskRow.swift */; };
@@ -49,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		40AC73362F6793B600701BC2 /* EditTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskView.swift; sourceTree = "<group>"; };
+		410D87B22F6923BB00341B24 /* TagSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionView.swift; sourceTree = "<group>"; };
 		987C12A72F64C19E00A1794A /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		987C12AE2F64C58400A1794A /* Taskit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Taskit.xcdatamodel; sourceTree = "<group>"; };
 		B27F35182F624D6300ADA5D5 /* TaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRow.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 		B27F351D2F624DE300ADA5D5 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				410D87B22F6923BB00341B24 /* TagSelectionView.swift */,
 				B27F35292F62508E00ADA5D5 /* modals */,
 				B27F351E2F624DFC00ADA5D5 /* NewTaskView.swift */,
 				B27F35232F624E9800ADA5D5 /* TaskDetailsView.swift */,
@@ -347,6 +350,7 @@
 				B27F351C2F624DA000ADA5D5 /* DateFormatting.swift in Sources */,
 				B27F35262F624EEE00ADA5D5 /* TaskRepository.swift in Sources */,
 				B27F35242F624E9800ADA5D5 /* TaskDetailsView.swift in Sources */,
+				410D87B32F6923DB00341B24 /* TagSelectionView.swift in Sources */,
 				B27F35222F624E5F00ADA5D5 /* Task.swift in Sources */,
 				B27F351F2F624DFC00ADA5D5 /* NewTaskView.swift in Sources */,
 				B28324702F62498400B633F8 /* CategoryChip.swift in Sources */,
