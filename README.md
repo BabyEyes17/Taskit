@@ -3,7 +3,7 @@
 ## Phase 1: Project Proposal
 [View the Project Proposal (PDF)](Documentation/Group%2064%20-%20COMP%203097%20-%20Project%20Proposal.pdf)
 
-### This phase outlines:
+### This phase outlined:
 - Project goals and scope
 - Target users
 - Core features
@@ -21,6 +21,22 @@
 - Designing user navigation flow
 - Establishing UI patterns for task creation and management
 - Building SwiftUI views using placeholder data (no database)
+
+## Phase 3: Early Prototype
+
+### This phase focused on:
+- Core Data persistence
+- CRUD operations
+- UI enhancements
+
+## Phase 4: Final Implmentation
+
+### This phase will focus on:
+- Local notification development
+- Task category management
+- Final UI enhancements
+- Bug fixing
+- Lab PC compatability fixes
 
 ### Tasks View
 The Tasks View lists all the user's tasks with the option to view tasks categorically, by predefined filters, or search queries. Each task has their own completion button and favourite button which allows for easy management. 
