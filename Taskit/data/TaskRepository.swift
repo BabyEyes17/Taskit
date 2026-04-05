@@ -2,6 +2,7 @@
 
 import CoreData
 import SwiftUI
+import UserNotifications
 
 struct TaskRepository {
     
@@ -57,5 +58,36 @@ struct TaskRepository {
         
         guard context.hasChanges else { return }
         try? context.save()
+    }
+    
+    static func scheduleNotification(for task: TaskEntity) {
+        
+        guard task.notificationsEnabled,
+              task.notifyBeforeMinutes > 0,
+              let dueDate = task.dueDate,
+              let taskId = task.id?.uuidString
+                
+        else { return }
+        
+        let triggerDate = dueDate.addingTimeInterval(-Double(task.notifyBeforeMinutes) * 60)
+        guard triggerDate > Date() else { return }
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Taskit Reminder"
+        content.subtitle = task.category ?? ""
+        content.body = "Due in \(Int(task.notifyBeforeMinutes).minutesToFriendlyString())"
+        content.sound = .default
+        
+        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: triggerDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: taskId, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request)
+    }
+    
+    static func cancelNotification(for task: TaskEntity) {
+        
+        guard let taskId = task.id?.uuidString else { return }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [taskId])
     }
 }
