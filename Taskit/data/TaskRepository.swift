@@ -17,7 +17,7 @@ struct TaskRepository {
         repeatRule: String,
         tags: [String],
         context: NSManagedObjectContext
-    ) {
+    ) -> TaskEntity {
         
         let task = TaskEntity(context: context)
         
@@ -34,6 +34,7 @@ struct TaskRepository {
         task.isFavourite = false
         
         save(context: context)
+        return task
     }
     
     static func deleteTask(_ task: TaskEntity, context: NSManagedObjectContext) {

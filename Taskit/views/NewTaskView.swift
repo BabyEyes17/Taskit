@@ -230,7 +230,7 @@ struct NewTaskView: View {
         guard !trimmed.isEmpty else { return }
 
 
-        TaskRepository.addTask(
+        let newTask = TaskRepository.addTask(
             title: trimmed,
             taskDescription: description,
             category: selectedCategory,
@@ -242,7 +242,9 @@ struct NewTaskView: View {
             context: context
         )
 
-
+        // Schedule Notification
+        TaskRepository.scheduleNotification(for: newTask)
+        
         dismiss()
     }
 }
