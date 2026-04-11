@@ -1,4 +1,6 @@
 // Authored by Jayden Lewis on 08/02/2026
+// Authored by Jayden Lewis on 08/02/2026
+// UI refresh — Jayden Lewis on 2026-04-11
 
 import SwiftUI
 
@@ -15,38 +17,32 @@ struct TaskDetailCard: View {
 
         VStack(spacing: 0) {
 
-            Group {
-                TaskDetailRow(icon: "list.bullet", title: category)
+            TaskDetailRow(icon: "list.bullet",      title: category,       iconColor: .blue)
+            Divider().padding(.leading, 62)
 
-                Divider().padding(.leading, 44)
+            TaskDetailRow(
+                icon: "text.alignleft",
+                title: description.isEmpty ? "No description" : description,
+                titleLineLimit: 4,
+                useSecondaryText: description.isEmpty,
+                iconColor: .purple
+            )
+            Divider().padding(.leading, 62)
 
-                TaskDetailRow(
-                    icon: "text.alignleft",
-                    title: description.isEmpty ? "No description" : description,
-                    titleLineLimit: 3,
-                    useSecondaryText: description.isEmpty
-                )
+            TaskDetailRow(icon: "clock",             title: dueDateText,    iconColor: .orange)
+            Divider().padding(.leading, 62)
 
-                Divider().padding(.leading, 44)
+            TaskDetailRow(icon: "bell",              title: notificationText, iconColor: notificationText == "Notifications off" ? .gray : .green)
+            Divider().padding(.leading, 62)
 
-                TaskDetailRow(icon: "clock", title: dueDateText)
-
-                Divider().padding(.leading, 44)
-
-                TaskDetailRow(icon: "bell", title: notificationText)
-
-                Divider().padding(.leading, 44)
-
-                TaskDetailRow(icon: "arrow.2.circlepath", title: repeatText)
-
-                Divider().padding(.leading, 44)
-            }
+            TaskDetailRow(icon: "arrow.2.circlepath", title: repeatText,   iconColor: .teal)
+            Divider().padding(.leading, 62)
 
             TagChipsView(tags: tags)
         }
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .shadow(color: .black.opacity(0.06), radius: 10, x: 0, y: 6)
+        .shadow(color: .black.opacity(0.06), radius: 12, x: 0, y: 4)
     }
 }
 
@@ -54,10 +50,10 @@ struct TaskDetailCard: View {
 
 #Preview {
     TaskDetailCard(
-        category: "General",
-        description: "Sort items on the desk and decide where everything should go for better workflow.",
+        category: "Work",
+        description: "Sort items on the desk and decide where everything should go.",
         dueDateText: "Sunday, January 25th - 9:00 AM",
-        notificationText: "Notifications off",
+        notificationText: "Notify me 15 minutes before",
         repeatText: "Repeat: Never",
         tags: ["Swift", "iOS 26"]
     )
