@@ -79,6 +79,10 @@ struct TaskDetailsView: View {
         }
         .alert("Delete Task", isPresented: $showDeleteAlert) {
             Button("Delete", role: .destructive) {
+                
+                // Cancel Notification
+                TaskRepository.deleteTask(task, context: context)
+                
                 TaskRepository.deleteTask(task, context: context)
                 dismiss()
             }

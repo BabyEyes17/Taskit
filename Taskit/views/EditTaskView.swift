@@ -217,8 +217,12 @@ struct EditTaskView: View {
 
     // MARK: - Actions
     private func saveChanges() {
+        
         let trimmed = title.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
+        
+        // Cancel Notification
+        TaskRepository.cancelNotification(for: task)
 
         task.title = trimmed
         task.taskDescription = description
@@ -230,6 +234,10 @@ struct EditTaskView: View {
         task.tags = tags as NSArray
 
         TaskRepository.save(context: context)
+        
+        // Schedule New Notification
+        TaskRepository.scheduleNotification(for: task)
+        
         dismiss()
     }
 

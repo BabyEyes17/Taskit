@@ -1,6 +1,7 @@
 // Authored by Jayden Lewis on 08/02/2026
 
 import SwiftUI
+import UserNotifications
 
 @main
 struct TaskitApp: App {
@@ -11,7 +12,11 @@ struct TaskitApp: App {
 
         WindowGroup {
             
-            TasksView().environment(\.managedObjectContext, persistence.container.viewContext)
+            TasksView()
+                
+                .environment(\.managedObjectContext, persistence.container.viewContext)
+            
+                .onAppear { UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }}
         }
     }
 }
