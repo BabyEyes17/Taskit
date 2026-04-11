@@ -1,3 +1,5 @@
+// UI refresh — Jayden Lewis on 2026-04-11
+
 import SwiftUI
 import CoreData
 
@@ -8,7 +10,6 @@ struct EditTaskView: View {
 
     @ObservedObject var task: TaskEntity
 
-    // Form state
     @State private var title: String
     @State private var description: String
     @State private var selectedCategory: String
@@ -17,24 +18,23 @@ struct EditTaskView: View {
     @State private var notifyBefore: String
     @State private var repeatOption: String
     @State private var tags: [String]
+    @State private var selectedTags: [String]
 
-    // Options
     private let notificationOptions = ["None", "5 Minutes Before", "15 Minutes Before", "30 Minutes Before", "1 Hour Before"]
     private let repeatOptions       = ["Does Not Repeat", "Daily", "Weekly", "Monthly"]
 
-    // MARK: - Initializer
     init(task: TaskEntity) {
-        self._task = ObservedObject(wrappedValue: task)
-        self._title = State(initialValue: task.title ?? "")
-        self._description = State(initialValue: task.taskDescription ?? "")
+        self._task             = ObservedObject(wrappedValue: task)
+        self._title            = State(initialValue: task.title ?? "")
+        self._description      = State(initialValue: task.taskDescription ?? "")
         self._selectedCategory = State(initialValue: task.category ?? "General")
-        self._dueDate = State(initialValue: task.dueDate ?? Date())
-        self._notifyBefore = State(initialValue: EditTaskView.notifyBeforeString(from: task.notifyBeforeMinutes, enabled: task.notificationsEnabled))
-        self._repeatOption = State(initialValue: task.repeatRule ?? "Does Not Repeat")
-        self._tags = State(initialValue: (task.tags as? [String]) ?? [])
+        self._dueDate          = State(initialValue: task.dueDate ?? Date())
+        self._notifyBefore     = State(initialValue: Self.notifyString(from: task.notifyBeforeMinutes, enabled: task.notificationsEnabled))
+        self._repeatOption     = State(initialValue: task.repeatRule ?? "Does Not Repeat")
+        self._tags             = State(initialValue: UserDefaults.standard.stringArray(forKey: "SavedTags") ?? ["Work", "School", "Personal"])
+        self._selectedTags     = State(initialValue: (task.tags as? [String]) ?? [])
     }
 
-    // MARK: - Derived helpers
     private var notificationsEnabled: Bool { notifyBefore != "None" }
 
     private var notifyBeforeMinutes: Int16 {
@@ -43,235 +43,206 @@ struct EditTaskView: View {
         case "15 Minutes Before": return 15
         case "30 Minutes Before": return 30
         case "1 Hour Before":     return 60
-        default:                    return 0
+        default:                  return 0
         }
     }
 
-    private var repeatRule: String { repeatOption }
+    private var isValid: Bool {
+        !title.trimmingCharacters(in: .whitespaces).isEmpty
+    }
 
-    // MARK: - Body
     var body: some View {
+
         ZStack {
+
             Color(.systemGroupedBackground).ignoresSafeArea()
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 14) {
 
-                    // Back button
+                VStack(alignment: .leading, spacing: 0) {
+
+                    // ── Header ───────────────────────────────────────────────
                     HStack {
                         Button { dismiss() } label: {
-                            Image(systemName: "chevron.left")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundStyle(.primary)
-                                .frame(width: 36, height: 36)
-                                .background(Color.white.opacity(0.85))
-                                .clipShape(Circle())
+                            HStack(spacing: 6) {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 14, weight: .semibold))
+                                Text("Back")
+                                    .font(.system(size: 16, weight: .medium))
+                            }
+                            .foregroundStyle(.blue)
                         }
                         Spacer()
-                    }
-                    .padding(.horizontal, 20)
-
-                    // Heading
-                    HStack {
                         Text("Edit Task")
-                            .font(.system(size: 40, weight: .bold))
+                            .font(.system(size: 16, weight: .semibold))
                         Spacer()
+                        Button(action: saveChanges) {
+                            Text("Save")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(isValid ? .blue : Color(.tertiaryLabel))
+                        }
+                        .disabled(!isValid)
                     }
                     .padding(.horizontal, 20)
-                    .padding(.top, 10)
+                    .padding(.top, 16)
+                    .padding(.bottom, 20)
 
-                    // Form card
-                    VStack(alignment: .leading, spacing: 0) {
+                    Text("Edit Task")
+                        .font(.system(size: 34, weight: .bold))
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 20)
 
-                        // Title
-                        TextField("Add Title", text: $title)
-                            .font(.system(size: 16))
-                            .padding()
-                            .background(Color.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
-                            .padding(.horizontal, 20)
-                            .accessibilityLabel("Task Title")
+                    // ── Title & Description ──────────────────────────────────
+                    FormSection {
+                        FormRow {
+                            TextField("Title", text: $title)
+                                .font(.system(size: 16))
+                        }
+                        Divider().padding(.leading, 16)
+                        FormRow {
+                            TextField("Description", text: $description, axis: .vertical)
+                                .lineLimit(3...5)
+                                .font(.system(size: 16))
+                        }
+                    }
+                    .padding(.bottom, 16)
 
-                        // Category picker
-                        HStack {
+                    // ── Category ─────────────────────────────────────────────
+                    FormSection {
+                        FormRow {
                             Text("Category")
-                                .font(.system(size: 15))
-                                .foregroundStyle(.secondary)
+                                .font(.system(size: 16))
                             Spacer()
                             Picker("", selection: $selectedCategory) {
                                 ForEach(categories, id: \.self) { Text($0) }
                             }
                             .pickerStyle(.menu)
                         }
-                        .padding()
-                        .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 10)
+                    }
+                    .padding(.bottom, 16)
 
-                        // Description
-                        TextField("Description", text: $description, axis: .vertical)
-                            .lineLimit(3...6)
-                            .font(.system(size: 16))
-                            .padding()
-                            .background(Color.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
-                            .padding(.horizontal, 20)
-                            .padding(.top, 10)
-                            .accessibilityLabel("Task Description")
-
-                        // Due date + time
-                        VStack(spacing: 0) {
+                    // ── Date & Time ──────────────────────────────────────────
+                    FormSection {
+                        FormRow {
                             DatePicker("Due Date", selection: $dueDate, displayedComponents: [.date])
-                                .padding()
-                            Divider().padding(.leading, 16)
-                            DatePicker("Time", selection: $dueDate, displayedComponents: [.hourAndMinute])
-                                .padding()
+                                .font(.system(size: 16))
                         }
-                        .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 10)
+                        Divider().padding(.leading, 16)
+                        FormRow {
+                            DatePicker("Time", selection: $dueDate, displayedComponents: [.hourAndMinute])
+                                .font(.system(size: 16))
+                        }
+                    }
+                    .padding(.bottom, 16)
 
-                        // Notify me
-                        HStack {
+                    // ── Notifications & Repeat ───────────────────────────────
+                    FormSection {
+                        FormRow {
                             Text("Notify me")
-                                .font(.system(size: 15))
-                                .foregroundStyle(.secondary)
+                                .font(.system(size: 16))
                             Spacer()
                             Picker("", selection: $notifyBefore) {
                                 ForEach(notificationOptions, id: \.self) { Text($0) }
                             }
                             .pickerStyle(.menu)
                         }
-                        .padding()
-                        .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 10)
-
-                        // Repeat
-                        HStack {
+                        Divider().padding(.leading, 16)
+                        FormRow {
                             Text("Repeat")
-                                .font(.system(size: 15))
-                                .foregroundStyle(.secondary)
+                                .font(.system(size: 16))
                             Spacer()
                             Picker("", selection: $repeatOption) {
                                 ForEach(repeatOptions, id: \.self) { Text($0) }
                             }
                             .pickerStyle(.menu)
                         }
-                        .padding()
-                        .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 10)
+                    }
+                    .padding(.bottom, 16)
 
-                        // Tags placeholder
-                        NavigationLink(destination: Text("Tag selection screen")) {
-                            HStack {
+                    // ── Tags ─────────────────────────────────────────────────
+                    FormSection {
+                        NavigationLink(destination: TagSelectionView(tags: $tags, selectedTags: $selectedTags)) {
+                            FormRow {
                                 Text("Tags")
                                     .font(.system(size: 16))
                                     .foregroundStyle(.primary)
                                 Spacer()
-                                Text(tags.isEmpty ? "No Tags Selected" : tags.joined(separator: ", "))
-                                    .foregroundStyle(.secondary)
+                                Text(selectedTags.isEmpty ? "None" : selectedTags.joined(separator: ", "))
                                     .font(.system(size: 15))
+                                    .foregroundStyle(Color(.secondaryLabel))
+                                    .lineLimit(1)
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundStyle(Color(.tertiaryLabel))
                             }
-                            .padding()
-                            .background(Color.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
                         }
-                        .padding(.horizontal, 20)
-                        .padding(.top, 10)
-
-                        // Save button
-                        Button(action: saveChanges) {
-                            Text("Save Changes")
-                                .font(.system(size: 17, weight: .semibold))
-                                .frame(maxWidth: .infinity)
-                                .foregroundStyle(.white)
-                                .padding()
-                                .background(title.trimmingCharacters(in: .whitespaces).isEmpty ? Color.blue.opacity(0.4) : Color.blue)
-                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 2)
-                        }
-                        .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 20)
-                        .padding(.bottom, 40)
                     }
+                    .padding(.bottom, 24)
+
+                    // ── Save button ──────────────────────────────────────────
+                    Button(action: saveChanges) {
+                        Text("Save Changes")
+                            .font(.system(size: 17, weight: .semibold))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 52)
+                            .foregroundStyle(.white)
+                            .background(isValid ? Color.blue : Color.blue.opacity(0.35))
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    }
+                    .disabled(!isValid)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 40)
                 }
-                .padding(.top, 14)
             }
         }
         .toolbar(.hidden, for: .navigationBar)
     }
 
-    // MARK: - Actions
     private func saveChanges() {
-        
         let trimmed = title.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
-        
-        // Cancel Notification
         TaskRepository.cancelNotification(for: task)
-
-        task.title = trimmed
-        task.taskDescription = description
-        task.category = selectedCategory
-        task.dueDate = dueDate
+        task.title                = trimmed
+        task.taskDescription      = description
+        task.category             = selectedCategory
+        task.dueDate              = dueDate
         task.notificationsEnabled = notificationsEnabled
-        task.notifyBeforeMinutes = notifyBeforeMinutes
-        task.repeatRule = repeatRule
-        task.tags = tags as NSArray
-
+        task.notifyBeforeMinutes  = notifyBeforeMinutes
+        task.repeatRule           = repeatOption
+        task.tags                 = selectedTags as NSArray
         TaskRepository.save(context: context)
-        
-        // Schedule New Notification
         TaskRepository.scheduleNotification(for: task)
-        
         dismiss()
     }
 
-    // MARK: - Mapping helpers
-    private static func notifyBeforeString(from minutes: Int16, enabled: Bool) -> String {
+    private static func notifyString(from minutes: Int16, enabled: Bool) -> String {
         guard enabled else { return "None" }
         switch minutes {
         case 5:  return "5 Minutes Before"
         case 15: return "15 Minutes Before"
         case 30: return "30 Minutes Before"
         case 60: return "1 Hour Before"
-        default: return "30 Minutes Before"
+        default: return "15 Minutes Before"
         }
     }
 }
 
 // MARK: - Preview
+
 #Preview {
     let context = PersistenceController.shared.container.viewContext
-    let sample = TaskEntity(context: context)
-    sample.id = UUID()
-    sample.title = "Finish debugging code"
-    sample.taskDescription = ""
-    sample.category = "Work"
-    sample.dueDate = Date().addingTimeInterval(3600)
+    let sample  = TaskEntity(context: context)
+    sample.id                  = UUID()
+    sample.title               = "Finish debugging code"
+    sample.taskDescription     = "Fix the migration crash."
+    sample.category            = "Work"
+    sample.dueDate             = Date().addingTimeInterval(3600)
     sample.notificationsEnabled = true
-    sample.notifyBeforeMinutes = 30
-    sample.repeatRule = "Does Not Repeat"
-    sample.tags = ["Programming", "Easy"] as NSArray
-    sample.isCompleted = false
-    sample.isFavourite = false
-
+    sample.notifyBeforeMinutes = 15
+    sample.repeatRule          = "Does Not Repeat"
+    sample.tags                = ["Swift", "iOS 26"] as NSArray
     return NavigationStack {
-        EditTaskView(task: sample).environment(\.managedObjectContext, context)
+        EditTaskView(task: sample)
+            .environment(\.managedObjectContext, context)
     }
 }
-
