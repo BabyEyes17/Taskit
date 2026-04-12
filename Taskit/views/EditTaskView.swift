@@ -13,12 +13,16 @@ struct EditTaskView: View {
     @State private var title: String
     @State private var description: String
     @State private var selectedCategory: String
-    @State private var categories: [String] = ["General", "School", "Work", "Personal"]
+    @State private var categories: [String] = UserDefaults.standard.stringArray(forKey: "categories") ?? ["General", "School", "Work", "Personal"]
     @State private var dueDate: Date
     @State private var notifyBefore: String
     @State private var repeatOption: String
     @State private var tags: [String]
     @State private var selectedTags: [String]
+    @State private var showingAddCategory = false
+    @State private var showingDeleteCategoryView = false
+    @State private var newCategoryName = ""
+
 
     private let notificationOptions = ["None", "5 Minutes Before", "15 Minutes Before", "30 Minutes Before", "1 Hour Before"]
     private let repeatOptions       = ["Does Not Repeat", "Daily", "Weekly", "Monthly"]
@@ -46,6 +50,11 @@ struct EditTaskView: View {
         default:                  return 0
         }
     }
+    
+    func saveCategories() {
+        UserDefaults.standard.set(categories, forKey: "categories")
+    }
+
 
     private var isValid: Bool {
         !title.trimmingCharacters(in: .whitespaces).isEmpty
@@ -109,17 +118,49 @@ struct EditTaskView: View {
 
                     // ── Category ─────────────────────────────────────────────
                     FormSection {
+
                         FormRow {
                             Text("Category")
                                 .font(.system(size: 16))
+
                             Spacer()
+
                             Picker("", selection: $selectedCategory) {
                                 ForEach(categories, id: \.self) { Text($0) }
                             }
                             .pickerStyle(.menu)
                         }
+
+                        Divider().padding(.leading, 16)
+
+                        HStack {
+
+                            Button {
+                                showingAddCategory = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "plus.circle.fill")
+                                    Text("Add Category")
+                                }
+                                .foregroundStyle(.blue)
+                            }
+
+                            Spacer()
+
+                            Button {
+                                showingDeleteCategoryView = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "trash")
+                                    Text("Delete Category")
+                                }
+                                .foregroundStyle(.red)
+                            }
+                        }
+                        .padding(.vertical, 10)
                     }
                     .padding(.bottom, 16)
+
 
                     // ── Date & Time ──────────────────────────────────────────
                     FormSection {
@@ -196,6 +237,58 @@ struct EditTaskView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
+        
+        .sheet(isPresented: $showingAddCategory) {
+
+            VStack(spacing: 16) {
+
+                Text("New Category")
+                    .font(.headline)
+                    .padding(.top)
+
+                TextField("Category name", text: $newCategoryName)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.horizontal)
+
+                HStack {
+
+                    Button("Cancel") {
+                        newCategoryName = ""
+                        showingAddCategory = false
+                    }
+
+                    Spacer()
+
+                    Button("Add") {
+                        let trimmed = newCategoryName.trimmingCharacters(in: .whitespaces)
+
+                        guard !trimmed.isEmpty else { return }
+
+                        if !categories.contains(trimmed) {
+                            categories.append(trimmed)
+                            saveCategories()
+                        }
+
+                        newCategoryName = ""
+                        showingAddCategory = false
+                    }
+                    .fontWeight(.semibold)
+                }
+                .padding(.horizontal)
+
+                Spacer()
+            }
+            .padding()
+            .presentationDetents([.height(220)])
+        }
+
+        .sheet(isPresented: $showingDeleteCategoryView) {
+            CategoryDeleteView(
+                categories: $categories,
+                selectedCategory: $selectedCategory
+            )
+        }
+
     }
 
     private func saveChanges() {

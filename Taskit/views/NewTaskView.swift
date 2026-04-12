@@ -1,7 +1,5 @@
 // Authored by Aidan Repchik
 // Integrated with TaskStore by Jayden Lewis on 08/02/2026
-// Authored by Aidan Repchik
-// Integrated with TaskStore by Jayden Lewis on 08/02/2026
 // UI refresh — Jayden Lewis on 2026-04-11
 
 import SwiftUI
@@ -15,12 +13,16 @@ struct NewTaskView: View {
     @State private var title            = ""
     @State private var description      = ""
     @State private var selectedCategory = "General"
-    @State private var categories       = ["General", "School", "Work", "Personal"]
+    @State private var categories: [String] = UserDefaults.standard.stringArray(forKey: "categories") ?? ["General", "School", "Work", "Personal"]
     @State private var dueDate          = Date()
     @State private var notifyBefore     = "15 Minutes Before"
     @State private var repeatOption     = "Does Not Repeat"
     @State private var tags: [String]   = UserDefaults.standard.stringArray(forKey: "SavedTags") ?? ["Work", "School", "Personal"]
     @State private var selectedTags: [String] = []
+    @State private var showingAddCategory = false
+    @State private var newCategoryName = ""
+    @State private var showingDeleteCategoryView = false
+
 
     let notificationOptions = ["None", "5 Minutes Before", "15 Minutes Before", "30 Minutes Before", "1 Hour Before"]
     let repeatOptions       = ["Does Not Repeat", "Daily", "Weekly", "Monthly"]
@@ -36,6 +38,11 @@ struct NewTaskView: View {
         default:                  return 0
         }
     }
+    
+    func saveCategories() {
+        UserDefaults.standard.set(categories, forKey: "categories")
+    }
+
 
     private var isValid: Bool {
         !title.trimmingCharacters(in: .whitespaces).isEmpty
@@ -100,20 +107,6 @@ struct NewTaskView: View {
                     }
                     .padding(.bottom, 16)
 
-                    // ── Category ─────────────────────────────────────────────
-                    FormSection {
-                        FormRow {
-                            Text("Category")
-                                .font(.system(size: 16))
-                                .foregroundStyle(.primary)
-                            Spacer()
-                            Picker("", selection: $selectedCategory) {
-                                ForEach(categories, id: \.self) { Text($0) }
-                            }
-                            .pickerStyle(.menu)
-                        }
-                    }
-                    .padding(.bottom, 16)
 
                     // ── Date & Time ──────────────────────────────────────────
                     FormSection {
@@ -129,29 +122,54 @@ struct NewTaskView: View {
                     }
                     .padding(.bottom, 16)
 
-                    // ── Notifications & Repeat ───────────────────────────────
+                    // ── Category ─────────────────────────────────────────────
                     FormSection {
+                        
                         FormRow {
-                            Text("Notify me")
+                            Text("Category")
                                 .font(.system(size: 16))
+                                .foregroundStyle(.primary)
+                            
                             Spacer()
-                            Picker("", selection: $notifyBefore) {
-                                ForEach(notificationOptions, id: \.self) { Text($0) }
+                            
+                            Picker("", selection: $selectedCategory) {
+                                ForEach(categories, id: \.self) { Text($0) }
                             }
                             .pickerStyle(.menu)
                         }
+                        
                         Divider().padding(.leading, 16)
-                        FormRow {
-                            Text("Repeat")
-                                .font(.system(size: 16))
-                            Spacer()
-                            Picker("", selection: $repeatOption) {
-                                ForEach(repeatOptions, id: \.self) { Text($0) }
+                        
+                        HStack {
+
+                            Button {
+                                showingAddCategory = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "plus.circle.fill")
+                                    Text("Add Category")
+                                }
+                                .foregroundStyle(.blue)
                             }
-                            .pickerStyle(.menu)
+
+                            Spacer()
+
+                            Button {
+                                showingDeleteCategoryView = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "trash")
+                                    Text("Delete Category")
+                                }
+                                .foregroundStyle(.red)
+                            }
                         }
+                        .padding(.vertical, 10)
+
                     }
                     .padding(.bottom, 16)
+
+
 
                     // ── Tags ─────────────────────────────────────────────────
                     FormSection {
@@ -190,8 +208,59 @@ struct NewTaskView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
-        .onChange(of: tags) { newTags in
-            UserDefaults.standard.set(newTags, forKey: "SavedTags")
+        
+        .sheet(isPresented: $showingAddCategory) {
+            VStack(spacing: 20) {
+                
+                Text("New Category")
+                    .font(.headline)
+                
+                TextField("Category name", text: $newCategoryName)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.horizontal)
+                
+                HStack {
+                    Button("Cancel") {
+                        newCategoryName = ""
+                        showingAddCategory = false
+                    }
+                    
+                    Spacer()
+                    
+                    Button("Add") {
+                        let trimmed = newCategoryName.trimmingCharacters(in: .whitespaces)
+                        
+                        guard !trimmed.isEmpty else { return }
+                        
+                        if !categories.contains(trimmed) {
+                            categories.append(trimmed)
+                            saveCategories()
+                        }
+                        
+                        newCategoryName = ""
+                        showingAddCategory = false
+                    }
+                    .fontWeight(.semibold)
+                }	
+                .padding(.horizontal)
+            }
+            .padding()
+            .presentationDetents([.height(200)])
+        }
+        
+        .sheet(isPresented: $showingDeleteCategoryView) {
+            CategoryDeleteView(
+                categories: $categories,
+                selectedCategory: $selectedCategory
+            )
+        }
+
+        
+        .onChange(of: tags) { newTags in UserDefaults.standard.set(newTags, forKey: "SavedTags")
+        
+
+            
+        
         }
     }
 
