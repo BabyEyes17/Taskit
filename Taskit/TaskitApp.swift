@@ -11,12 +11,11 @@ struct TaskitApp: App {
     var body: some Scene {
 
         WindowGroup {
-            
-            TasksView()
-                
+            RootView()
                 .environment(\.managedObjectContext, persistence.container.viewContext)
-            
-                .onAppear { UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }}
+                .onAppear {
+                    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
+                }
         }
     }
 }
